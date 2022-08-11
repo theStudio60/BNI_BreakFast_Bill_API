@@ -7,38 +7,71 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AssociationRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext:['groups' => ['get:read']],
+    collectionOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut consulter les associations",
+        ],
+        'post' => [
+            'path'=> 'association',
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut ajouter une association",
+            ]
+    ],
+    itemOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut consulter les associations",
+        ],
+        'put' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut modifier les associations",
+            ]
+    ],
+)]
 class Association
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["get:read"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["get:read"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["get:read"])]
     private ?string $street = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Groups(["get:read"])]
     private ?string $street_number = null;
 
     #[ORM\Column]
+    #[Groups(["get:read"])]
     private ?int $zip_code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["get:read"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["get:read"])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(["get:read"])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups(["get:read"])]
     private ?bool $is_active = null;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Bill::class)]
@@ -75,6 +108,7 @@ class Association
         $this->sessionPlaces = new ArrayCollection();
         $this->sessionTypes = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->created_at = new \DateTime();
     }
 
     public function getId(): ?int

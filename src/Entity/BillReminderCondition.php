@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\BillReminderConditionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\BillReminderConditionRepository;
 
 #[ORM\Entity(repositoryClass: BillReminderConditionRepository::class)]
 #[ApiResource]
