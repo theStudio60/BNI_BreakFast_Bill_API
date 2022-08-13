@@ -8,6 +8,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Renvoi un message d'erreur personnalisé si l'identifiant n'est pas correct lors du login
+ * inisialisé dans config/service.yaml
  */
 class AuthenticationFailureListener {
     /**

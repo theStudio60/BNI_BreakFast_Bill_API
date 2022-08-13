@@ -6,6 +6,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 
 /**
  * Permet la personnalisation d'un message personnalisé si le token à expiré
+ * inisialisé dans config/service.yaml
  */
 class JWTExpiredListener {
 
