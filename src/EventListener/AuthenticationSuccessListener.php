@@ -4,7 +4,9 @@ namespace App\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
+/**
+ * Retourne des data supplémentaire non encodée avec la clef JWT si le login est correct
+ */
 class AuthenticationSuccessListener{
     /**
      * @param AuthenticationSuccessEvent $event

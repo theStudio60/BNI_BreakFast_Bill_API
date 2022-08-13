@@ -4,6 +4,9 @@ namespace App\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 
+/**
+ * Permet la personnalisation d'un message personnalisé si le token à expiré
+ */
 class JWTExpiredListener {
 
 /**

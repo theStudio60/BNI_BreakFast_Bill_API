@@ -6,7 +6,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\EventDispatcher\Event;
 
-
+/**
+ * Renvoi un message d'erreur personnalisé si l'identifiant n'est pas correct lors du login
+ */
 class AuthenticationFailureListener {
     /**
      * @param AuthenticationFailureEvent $event
