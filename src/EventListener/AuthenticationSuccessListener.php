@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Retourne des data supplémentaire non encodée avec la clef JWT si le login est correct
- * inisialisé dans config/service.yaml
+ * inisialisé dans config/services.yaml
  */
 class AuthenticationSuccessListener{
     /**
