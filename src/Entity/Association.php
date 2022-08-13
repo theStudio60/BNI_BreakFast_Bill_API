@@ -18,7 +18,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             "security_message" => "Seul un administrateur peut consulter les associations",
         ],
         'post' => [
-            'path'=> 'association',
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Seul un administrateur peut ajouter une association",
             ]
