@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
     normalizationContext:['groups' => ['get:read']],
+    denormalizationContext:['groups' => ['post-put:write']],
     collectionOperations:[
         'get' => [
             "security" => "is_granted('ROLE_ADMIN')",
@@ -20,6 +21,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'post' => [
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Seul un administrateur peut ajouter une association",
+            'openapi_context' => [
+                'summary' => 'Créer une nouvelle association',
+            ],
             ]
     ],
     itemOperations:[
@@ -42,27 +46,27 @@ class Association
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "post-put:write"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "post-put:write"])]
     private ?string $street = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "post-put:write"])]
     private ?string $street_number = null;
 
     #[ORM\Column]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "post-put:write"])]
     private ?int $zip_code = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "post-put:write"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "post-put:write"])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -107,7 +111,9 @@ class Association
         $this->sessionPlaces = new ArrayCollection();
         $this->sessionTypes = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+
         $this->created_at = new \DateTime();
+        $this->is_active = true;
     }
 
     public function getId(): ?int

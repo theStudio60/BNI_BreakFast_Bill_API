@@ -10,7 +10,33 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut consulter les associations",
+        ],
+        'post' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut ajouter une association",
+        ],
+        'generate' => [
+            'method' => 'get',
+            'path' => '/bills/generate',
+            'controller' => BillGenerateController::class
+        ]
+    ],
+    itemOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut consulter les associations",
+        ],
+        'put' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Seul un administrateur peut modifier les associations",
+            ]
+    ],
+)]
 class Bill
 {
     #[ORM\Id]
