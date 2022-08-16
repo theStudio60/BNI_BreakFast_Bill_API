@@ -16,6 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get' => [
             'security' => 'is_granted("ROLE_ADMIN")',
             'security_message' => 'Seul un administrateur peut consulter les associations',
+            'openapi_context' => [
+                'summary'     => 'Retourne la liste des associations',
+            ]
         ],
         'post' => [
             'security' => 'is_granted("ROLE_ADMIN")',
@@ -56,10 +59,43 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get' => [
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Seul un administrateur peut consulter les associations",
+            'openapi_context' => [
+                'summary'     => 'Retourne une association',
+            ]
         ],
         'put' => [
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Seul un administrateur peut modifier les associations",
+            'openapi_context' => [
+                'summary'     => 'Modifier association',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'name' => ['type' => 'string'],
+                                        'street' => ['type' => 'string'],
+                                        'streetNumber' => ['type' => 'string'],
+                                        'zipCode' => ['type' => 'int'],
+                                        'city' => ['type' => 'string'],
+                                        'email' => ['type' => 'string'],
+                                    ],
+                            ],
+                            'example' => [
+                                'name' => 'Green Peace',
+                                'street' => 'Rue de la Madelaine',
+                                'streetNumber' => '3A',
+                                'zipCode' => 1000,
+                                'city' => 'Lausanne',
+                                'email' => 'info@greenpeace.com',
+                            ],
+                        ],
+                    ],
+                ],
+            ],            
             ]
     ],
 )]
