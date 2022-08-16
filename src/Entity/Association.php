@@ -12,19 +12,45 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
     normalizationContext:['groups' => ['get:read']],
-    denormalizationContext:['groups' => ['post-put:write']],
     collectionOperations:[
         'get' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Seul un administrateur peut consulter les associations",
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'security_message' => 'Seul un administrateur peut consulter les associations',
         ],
         'post' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Seul un administrateur peut ajouter une association",
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'security_message' => 'Seul un administrateur peut ajouter une association',
             'openapi_context' => [
-                'summary' => 'Créer une nouvelle association',
+                'summary'     => 'Créer une nouvelle association',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'name' => ['type' => 'string'],
+                                        'street' => ['type' => 'string'],
+                                        'streetNumber' => ['type' => 'string'],
+                                        'zipCode' => ['type' => 'int'],
+                                        'city' => ['type' => 'string'],
+                                        'email' => ['type' => 'string'],
+                                    ],
+                            ],
+                            'example' => [
+                                'name' => 'Green Peace',
+                                'street' => 'Rue de la Madelaine',
+                                'streetNumber' => '3A',
+                                'zipCode' => 1000,
+                                'city' => 'Lausanne',
+                                'email' => 'info@greenpeace.com',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-            ]
+        ],
     ],
     itemOperations:[
         'get' => [
@@ -46,27 +72,27 @@ class Association
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read", "post-put:write"])]
+    #[Groups(["get:read"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read", "post-put:write"])]
+    #[Groups(["get:read"])]
     private ?string $street = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(["get:read", "post-put:write"])]
+    #[Groups(["get:read"])]
     private ?string $street_number = null;
 
     #[ORM\Column]
-    #[Groups(["get:read", "post-put:write"])]
+    #[Groups(["get:read"])]
     private ?int $zip_code = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read", "post-put:write"])]
+    #[Groups(["get:read"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read", "post-put:write"])]
+    #[Groups(["get:read"])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -112,7 +138,7 @@ class Association
         $this->sessionTypes = new ArrayCollection();
         $this->sessions = new ArrayCollection();
 
-        $this->created_at = new \DateTime();
+        $this->created_at = new \DateTimeImmutable();
         $this->is_active = true;
     }
 
