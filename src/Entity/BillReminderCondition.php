@@ -5,12 +5,12 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OwnerInterface\AssociationOwnerInterface;
 use App\Repository\BillReminderConditionRepository;
 
 #[ORM\Entity(repositoryClass: BillReminderConditionRepository::class)]
-#[ApiResource]
 
-class BillReminderCondition
+class BillReminderCondition implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

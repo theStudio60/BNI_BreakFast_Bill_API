@@ -5,10 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SessionPlaceRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OwnerInterface\AssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: SessionPlaceRepository::class)]
-#[ApiResource]
-class SessionPlace
+class SessionPlace implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

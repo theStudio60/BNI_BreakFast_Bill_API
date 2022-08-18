@@ -24,6 +24,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'security' => 'is_granted("ROLE_ADMIN")',
             'security_message' => 'Seul un administrateur peut ajouter une association',
             'openapi_context' => [
+                // 'parameters' => [
+                //     'in' => 'header',
+                //     'name' => 'data-association'
+                // ],
                 'summary'     => 'Créer une nouvelle association',
                 'description' => "",
                 'requestBody' => [
@@ -96,7 +100,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ],
                 ],
             ],            
-            ]
+        ]
     ],
 )]
 class Association

@@ -7,7 +7,6 @@ use App\Repository\BillReminderRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: BillReminderRepository::class)]
-#[ApiResource]
 class BillReminder
 {
     #[ORM\Id]

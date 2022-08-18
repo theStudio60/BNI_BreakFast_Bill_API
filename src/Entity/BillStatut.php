@@ -8,7 +8,6 @@ use App\Repository\BillStatutRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: BillStatutRepository::class)]
-#[ApiResource]
 class BillStatut
 {
     #[ORM\Id]

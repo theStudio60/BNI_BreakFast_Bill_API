@@ -7,21 +7,61 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OwnerInterface\AssociationOwnerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
-#[ApiResource]
-class Item
+#[ApiResource(
+    normalizationContext:['groups' => ['get:read']],
+    collectionOperations:[
+        'get',
+        'post' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un administrateur peut ajouter un item',
+            'openapi_context' => [
+                'summary'     => 'Créer un nouvel item',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'name' => ['type' => 'string'],
+                                        'PriceOf' => ['type' => 'decimal'],
+                                    ],
+                            ],
+                            'example' => [
+                                'name' => 'Abonnement Netflix',
+                                'priceOf' => 'Prix de la prestation',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    itemOperations:[
+        'put',
+        'get'
+    ]
+)]
+class Item implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['get:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['get:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
+    #[Groups(['get:read'])]
     private ?string $price_of = null;
 
     #[ORM\ManyToMany(targetEntity: Bill::class, inversedBy: 'items')]

@@ -7,7 +7,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BillStatutNameRepository;
 
 #[ORM\Entity(repositoryClass: BillStatutNameRepository::class)]
-#[ApiResource]
+
 class BillStatutName
 {
     #[ORM\Id]

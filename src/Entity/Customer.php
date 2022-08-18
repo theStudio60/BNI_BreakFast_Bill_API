@@ -7,10 +7,10 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\OwnerInterface\AssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[ApiResource]
-class Customer
+class Customer implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

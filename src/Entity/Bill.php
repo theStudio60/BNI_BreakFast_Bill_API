@@ -8,36 +8,11 @@ use App\Repository\BillRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\OwnerInterface\AssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
-#[ApiResource(
-    collectionOperations:[
-        'get' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Seul un administrateur peut consulter les associations",
-        ],
-        'post' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Seul un administrateur peut ajouter une association",
-        ],
-        'generate' => [
-            'method' => 'get',
-            'path' => '/bills/generate',
-            'controller' => BillGenerateController::class
-        ]
-    ],
-    itemOperations:[
-        'get' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Seul un administrateur peut consulter les associations",
-        ],
-        'put' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Seul un administrateur peut modifier les associations",
-            ]
-    ],
-)]
-class Bill
+
+class Bill implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

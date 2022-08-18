@@ -7,10 +7,10 @@ use App\Repository\SessionRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\OwnerInterface\AssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
-#[ApiResource]
-class Session
+class Session implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

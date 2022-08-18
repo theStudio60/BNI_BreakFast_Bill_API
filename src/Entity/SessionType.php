@@ -6,10 +6,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SessionTypeRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OwnerInterface\AssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: SessionTypeRepository::class)]
-#[ApiResource]
-class SessionType
+class SessionType implements AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

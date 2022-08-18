@@ -7,9 +7,10 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\OwnerInterface\AssociationOwnerInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -21,7 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'post', 'get'
     ]
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, AssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

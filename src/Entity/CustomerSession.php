@@ -7,7 +7,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CustomerSessionRepository;
 
 #[ORM\Entity(repositoryClass: CustomerSessionRepository::class)]
-#[ApiResource]
 class CustomerSession
 {
     #[ORM\Id]
