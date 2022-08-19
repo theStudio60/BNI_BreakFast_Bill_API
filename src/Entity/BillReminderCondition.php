@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\OwnerInterface\AssociationOwnerInterface;
 use App\Repository\BillReminderConditionRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BillReminderConditionRepository::class)]
 
@@ -18,15 +19,19 @@ class BillReminderCondition implements AssociationOwnerInterface
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['bill:get:read'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?int $day_for_paid = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+    #[Groups(['bill:get:read'])]
     private ?string $add_amount = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['bill:get:read'])]
     private ?int $for_reminder_number = null;
 
     #[ORM\ManyToOne(inversedBy: 'billReminderConditions')]

@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BillStatutRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BillStatutRepository::class)]
 class BillStatut
@@ -20,13 +21,20 @@ class BillStatut
     private ?Bill $bill = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
+    #[Groups(['bill:get:read'])]
     private ?string $balance = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['bill:get:read'])]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['bill:get:read'])]
     private ?User $updated_by = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['bill:get:read'])]
+    private ?BillStatutName $bill_statut_name = null;
 
     public function getId(): ?int
     {
@@ -77,6 +85,18 @@ class BillStatut
     public function setUpdatedBy(?User $updated_by): self
     {
         $this->updated_by = $updated_by;
+
+        return $this;
+    }
+
+    public function getBillStatutName(): ?BillStatutName
+    {
+        return $this->bill_statut_name;
+    }
+
+    public function setBillStatutName(?BillStatutName $bill_statut_name): self
+    {
+        $this->bill_statut_name = $bill_statut_name;
 
         return $this;
     }

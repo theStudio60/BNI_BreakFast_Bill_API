@@ -5,14 +5,85 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BillRepository;
+use App\OwnerInterface\UserOwnerInterface;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OwnerInterface\AssociationOwnerInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
+#[ApiResource( 
+    normalizationContext:['groups' => ['bill:get:read']],
+    collectionOperations:[
+    'get' => [
+        'security' => 'is_granted("ROLE_USER")',
+        'security_message' => 'Seul un utilisateur peut consulter les factures',
+        'openapi_context' => [
+            'summary'     => 'Retourne la liste des factures',
+        ]
+    ],
+    'post' => [
+        'security' => 'is_granted("ROLE_USER")',
+        'security_message' => 'Seul un utilisateur peut ajouter une facture',
+        'openapi_context' => [
+            'summary'     => 'Créer une nouvelle facture',
+            'description' => "",
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema'  => [
+                            'type'       => 'object',
+                            'properties' =>
+                                [
+                                    'amount' => ['type' => 'string'],
+                                ],
+                        ],
+                        'example' => [
+                            'amount' => '99.50',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+],
+itemOperations:[
+    'get' => [
+        "security" => "is_granted('ROLE_USER')",
+        "security_message" => "Seul un utilisateur peut consulter les factures",
+        'openapi_context' => [
+            'summary'     => 'Retourne une facture',
+        ]
+    ],
+    'put' => [
+        "security" => "is_granted('ROLE_USER')",
+        "security_message" => "Seul un utilisateur peut modifier une facture",
+        'openapi_context' => [
+            'summary'     => 'Modifier une facture',
+            'description' => "",
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema'  => [
+                            'type'       => 'object',
+                            'properties' =>
+                                [
+                                    'amount' => ['type' => 'string'],
+                                ],
+                        ],
+                        'example' => [
+                            'amount' => '99.50',
+                        ],
+                    ],
+                ],
+            ],
+        ],            
+    ]
+],
+)]
 
-class Bill implements AssociationOwnerInterface
+class Bill implements AssociationOwnerInterface, UserOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,24 +92,31 @@ class Bill implements AssociationOwnerInterface
 
     #[ORM\ManyToOne(inversedBy: 'bills')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['bill:get:read'])]
     private ?User $created_by = null;
 
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?\DateTimeImmutable $from_at = null;
 
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?\DateTimeImmutable $to_at = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    #[Groups(['bill:get:read'])]
     private ?string $amount = null;
 
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?bool $is_archived = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['bill:get:read'])]
     private ?int $reminder_number = null;
 
     #[ORM\ManyToOne(inversedBy: 'bills')]
@@ -46,18 +124,25 @@ class Bill implements AssociationOwnerInterface
     private ?Association $association = null;
 
     #[ORM\OneToOne(mappedBy: 'bill', cascade: ['persist', 'remove'])]
+    #[Groups(['bill:get:read'])]
     private ?BillStatut $billStatut = null;
 
     #[ORM\OneToMany(mappedBy: 'bill', targetEntity: BillReminder::class)]
+    #[Groups(['bill:get:read'])]
     private Collection $billReminders;
 
     #[ORM\ManyToMany(targetEntity: Item::class, mappedBy: 'bill')]
+    #[Groups(['bill:get:read'])]
     private Collection $items;
 
     public function __construct()
     {
         $this->billReminders = new ArrayCollection();
         $this->items = new ArrayCollection();
+        $this->is_archived = false;
+        $this->created_at = new \DateTimeImmutable();
+        $this->from_at = new \DateTimeImmutable();
+        $this->to_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int

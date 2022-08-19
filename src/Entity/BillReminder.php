@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BillReminderRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BillReminderRepository::class)]
 class BillReminder
@@ -18,10 +19,12 @@ class BillReminder
     private ?Bill $bill = null;
 
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?\DateTimeImmutable $reminder_at = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['bill:get:read'])]
     private ?BillReminderCondition $bill_reminder_condition = null;
 
     public function getId(): ?int

@@ -46,11 +46,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Associa
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:get:read'])]
+    #[Groups(['user:get:read', 'bill:get:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:get:read'])]
+    #[Groups(['user:get:read', 'bill:get:read'])]
     private ?string $lastname = null;
 
     #[ORM\ManyToOne]

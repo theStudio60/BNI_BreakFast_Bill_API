@@ -57,11 +57,11 @@ class Item implements AssociationOwnerInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:read'])]
+    #[Groups(['get:read', 'bill:get:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
-    #[Groups(['get:read'])]
+    #[Groups(['get:read', 'bill:get:read'])]
     private ?string $price_of = null;
 
     #[ORM\ManyToMany(targetEntity: Bill::class, inversedBy: 'items')]
