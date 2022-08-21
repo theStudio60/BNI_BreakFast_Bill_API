@@ -21,10 +21,11 @@ class AuthenticationSuccessListener{
             return;
         }
 
-        $data['data'] = array(
-            'associationId' => $user->getAssociation()->getId()
-        );
+    //ajout de data dans le token (non cryptée)
+        // $data['data'] = array(
+        // );
 
-        $event->setData($data);
+        //on inject les data si il y en a
+        $data?$event->setData($data):null;
     }
 }

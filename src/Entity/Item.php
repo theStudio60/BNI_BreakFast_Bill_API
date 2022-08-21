@@ -7,9 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\OwnerInterface\AssociationOwnerInterface;
+use App\OInterface\AssociationOwnerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 #[ApiResource(
@@ -48,7 +49,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get'
     ]
 )]
-class Item implements AssociationOwnerInterface
+class Item implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

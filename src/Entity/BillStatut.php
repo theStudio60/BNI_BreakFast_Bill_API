@@ -20,6 +20,7 @@ class BillStatut
     #[ORM\JoinColumn(nullable: false)]
     private ?Bill $bill = null;
 
+    //valeur du montant déjà payé par le client
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
     #[Groups(['bill:get:read'])]
     private ?string $balance = null;
@@ -35,6 +36,10 @@ class BillStatut
     #[ORM\ManyToOne]
     #[Groups(['bill:get:read'])]
     private ?BillStatutName $bill_statut_name = null;
+
+    public function __construct(){
+       $this->updated_at = new \DateTimeImmutable(); 
+    }
 
     public function getId(): ?int
     {

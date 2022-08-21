@@ -3,7 +3,7 @@
 namespace App\Serializer;
 
 
-use App\OwnerInterface\UserOwnerInterface;
+use App\OInterface\UserOwnerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -55,7 +55,7 @@ class UserOwnerDenormalizer implements ContextAwareDenormalizerInterface, Denorm
         $obj = $this->denormalizer->denormalize($data, $type, $format, $context);
 
         $user = $this->security->getUser();     
-        $obj->setCreatedBy($user);
+            $obj->setCreatedBy($user);
 
         return $obj;
     }

@@ -6,11 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SessionRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OInterface\AssociationOwnerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\OwnerInterface\AssociationOwnerInterface;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
-class Session implements AssociationOwnerInterface
+class Session implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

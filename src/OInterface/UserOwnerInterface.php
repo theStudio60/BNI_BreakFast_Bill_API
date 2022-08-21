@@ -1,6 +1,6 @@
 <?php
 
-namespace App\OwnerInterface;
+namespace App\OInterface;
 
 use App\Entity\User;
 

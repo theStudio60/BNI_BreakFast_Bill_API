@@ -6,10 +6,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SessionTypeRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\OwnerInterface\AssociationOwnerInterface;
+use App\OInterface\AssociationOwnerInterface;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: SessionTypeRepository::class)]
-class SessionType implements AssociationOwnerInterface
+class SessionType implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

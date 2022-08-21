@@ -3,12 +3,12 @@
 namespace App\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Security;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use App\OwnerInterface\AssociationOwnerInterface;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security;
+use App\OInterface\ForQueryAssociationOwnerInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 
 class CurrentAssociationExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface{
     
@@ -65,8 +65,8 @@ class CurrentAssociationExtension implements QueryCollectionExtensionInterface, 
      */
     public function addWhere(string $resourceClass, QueryBuilder $queryBuilder){
         $reflectionClass = new \ReflectionClass($resourceClass);
-        if($reflectionClass->implementsInterface(AssociationOwnerInterface::class)){
-            $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()->getId()]);
+        if($reflectionClass->implementsInterface(ForQueryAssociationOwnerInterface::class)){
+            $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()]);
             $asssociationId = $user->getAssociation()->getId() ;
 
             $alias = $queryBuilder->getAllAliases()[0];

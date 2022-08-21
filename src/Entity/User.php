@@ -6,9 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OInterface\AssociationOwnerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\OwnerInterface\AssociationOwnerInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         'post', 'get'
     ]
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, AssociationOwnerInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, AssociationOwnerInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

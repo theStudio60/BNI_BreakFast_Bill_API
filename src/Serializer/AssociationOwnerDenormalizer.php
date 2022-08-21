@@ -4,7 +4,7 @@ namespace App\Serializer;
 
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\Security;
-use App\OwnerInterface\AssociationOwnerInterface;
+use App\OInterface\AssociationOwnerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -52,13 +52,13 @@ class AssociationOwnerDenormalizer implements ContextAwareDenormalizerInterface,
         array $context = [])
     {
         $context[$this->allReadyCalledKey($type)] = true;
-        $obj = $this->denormalizer->denormalize($data, $type, $format, $context);
+        $association = $this->denormalizer->denormalize($data, $type, $format, $context);
 
-        $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()->getId()]);
+        $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()]);
         $asssociation = $user->getAssociation() ;        
-        $obj->setAssociation($asssociation);
+            $association->setAssociation($asssociation);
 
-        return $obj;
+        return $association;
     }
 
     private function allReadyCalledKey(string $key){

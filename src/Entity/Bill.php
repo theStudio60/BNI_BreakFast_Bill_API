@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\OInterface\BillInterface;
 use App\Repository\BillRepository;
-use App\OwnerInterface\UserOwnerInterface;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\OwnerInterface\AssociationOwnerInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
 #[ApiResource( 
@@ -36,11 +36,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
                             'type'       => 'object',
                             'properties' =>
                                 [
-                                    'amount' => ['type' => 'string'],
+                                    'amount' => ['type' => 'decimal'],
+                                    'itemList' => ['type' => 'array'],
                                 ],
                         ],
                         'example' => [
-                            'amount' => '99.50',
+                            'amount' => '99.00 [Montant de la facture]',
+                            'itemList' => '[1, 2, 3] [array d\'items]'
                         ],
                     ],
                 ],
@@ -69,11 +71,17 @@ itemOperations:[
                             'type'       => 'object',
                             'properties' =>
                                 [
-                                    'amount' => ['type' => 'string'],
+                                    'amount' => ['type' => 'decimal'],
+                                    'isArchived' => ['type' => 'boolean'],
+                                    'balance' => ['type' => 'decimal'],
+                                    'billStatutName' => ['type' => 'int']
                                 ],
                         ],
                         'example' => [
-                            'amount' => '99.50',
+                            'amount' => '99.00 [Montant de la facture]',
+                            'isArchived' => 'false [Archivée: true ou non archivée: false]',
+                            'balance' => '10.00 [Montant partiel dàjà payé ou null]',
+                            'billStatutName' => '1 [1 = En attente ou 2 = Payée]'
                         ],
                     ],
                 ],
@@ -83,7 +91,7 @@ itemOperations:[
 ],
 )]
 
-class Bill implements AssociationOwnerInterface, UserOwnerInterface
+class Bill implements BillInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

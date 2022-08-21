@@ -5,13 +5,14 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\OwnerInterface\AssociationOwnerInterface;
+use App\OInterface\AssociationOwnerInterface;
 use App\Repository\BillReminderConditionRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: BillReminderConditionRepository::class)]
 
-class BillReminderCondition implements AssociationOwnerInterface
+class BillReminderCondition implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
