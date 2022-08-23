@@ -3,49 +3,159 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\OInterface\CustomerInterface;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\OInterface\AssociationOwnerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface
+#[ApiResource(
+    normalizationContext:['groups' => ['customer:get:read']],
+    collectionOperations:[
+    'get' => [
+        'security' => 'is_granted("ROLE_USER")',
+        'security_message' => 'Seul un utilisateur peut consulter les membres',
+        'openapi_context' => [
+            'summary'     => 'Retourne la liste des membres',
+        ]
+    ],  
+    'post' => [
+        'security' => 'is_granted("ROLE_USER")',
+        'security_message' => 'Seul un utilisateur peut ajouter un membre',
+        'openapi_context' => [
+            'summary'     => 'Créer un nouveau membre',
+            'description' => "",
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema'  => [
+                            'type'       => 'object',
+                            'properties' =>
+                                [
+                                    'firstname' => ['type' => 'string'],
+                                    'lastname' => ['type' => 'boolean'],
+                                    'street' => ['type' => 'decimal'],
+                                    'streetNumber' => ['type' => 'string'],
+                                    'zipCode' => ['type' => 'int'],
+                                    'city' => ['type' => 'string'],
+                                    'company' => ['type' => 'string'],
+                                    'email' => ['type' => 'string']
+                                ],
+                        ],
+                        'example' => [
+                            'firstname' => 'Jhon [Prénom]',
+                            'lastname' => 'Doe [Nom]',
+                            'street' => 'Rue de la poste [Rue / Chemin]',
+                            'streetNumber' => '3A [Numéro de rue]',
+                            'zipCode' => '1020 [Code Postal]',
+                            'city' => 'Lausanne [Ville]',
+                            'company' => 'Une entreprise SA [Nom de l\'entreprise]',
+                            'email' => 'jdoe@gmail.com [Email]',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+],
+itemOperations:[
+    'get' => [
+        "security" => "is_granted('ROLE_USER')",
+        "security_message" => "Seul un utilisateur peut consulter les membres",
+        'openapi_context' => [
+            'summary'     => 'Retourne un membre',
+        ]
+    ],
+    'put' => [
+        "security" => "is_granted('ROLE_USER')",
+        "security_message" => "Seul un utilisateur peut modifier un membre",
+        'openapi_context' => [
+            'summary'     => 'Modifier un membre',
+            'description' => "",
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema'  => [
+                            'type'       => 'object',
+                            'properties' =>
+                                [
+                                    'firstname' => ['type' => 'string'],
+                                    'lastname' => ['type' => 'boolean'],
+                                    'street' => ['type' => 'decimal'],
+                                    'streetNumber' => ['type' => 'string'],
+                                    'zipCode' => ['type' => 'int'],
+                                    'city' => ['type' => 'string'],
+                                    'company' => ['type' => 'string'],
+                                    'email' => ['type' => 'string'],
+                                ],
+                        ],
+                        'example' => [
+                            'firstname' => 'Jhon [Prénom]',
+                            'lastname' => 'Doe [Nom]',
+                            'street' => 'Rue de la poste [Rue / Chemin]',
+                            'streetNumber' => '3A [Numéro de rue]',
+                            'zipCode' => '1020 [Code Postal]',
+                            'city' => 'Lausanne [Ville]',
+                            'company' => 'Une entreprise SA [Nom de l\'entreprise]',
+                            'email' => 'jdoe@gmail.com [Email]',
+                        ],
+                    ],
+                ],
+            ],
+        ],            
+    ]
+],
+)]    
+
+class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:get:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:get:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:get:read'])]
     private ?string $street = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Groups(['customer:get:read'])]
     private ?string $street_number = null;
 
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?int $zip_code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:get:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:get:read'])]
     private ?string $company = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['customer:get:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?bool $statut = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['customer:get:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $created_by = null;
 
@@ -54,14 +164,20 @@ class Customer implements AssociationOwnerInterface, ForQueryAssociationOwnerInt
     private ?Association $association = null;
 
     #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    #[Groups(['customer:get:read'])]
     private ?Membership $membership = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: CustomerSession::class)]
     private Collection $customerSessions;
 
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Bill::class)]
+    private Collection $bills;
+
     public function __construct()
     {
         $this->customerSessions = new ArrayCollection();
+        $this->bills = new ArrayCollection();
+        $this->statut = true;
     }
 
     public function getId(): ?int
@@ -242,6 +358,36 @@ class Customer implements AssociationOwnerInterface, ForQueryAssociationOwnerInt
             // set the owning side to null (unless already changed)
             if ($customerSession->getCustomer() === $this) {
                 $customerSession->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bill>
+     */
+    public function getBills(): Collection
+    {
+        return $this->bills;
+    }
+
+    public function addBill(Bill $bill): self
+    {
+        if (!$this->bills->contains($bill)) {
+            $this->bills->add($bill);
+            $bill->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBill(Bill $bill): self
+    {
+        if ($this->bills->removeElement($bill)) {
+            // set the owning side to null (unless already changed)
+            if ($bill->getCustomer() === $this) {
+                $bill->setCustomer(null);
             }
         }
 

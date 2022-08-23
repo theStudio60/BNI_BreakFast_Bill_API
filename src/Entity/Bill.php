@@ -22,7 +22,7 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
         'openapi_context' => [
             'summary'     => 'Retourne la liste des factures',
         ]
-    ],
+    ],  
     'post' => [
         'security' => 'is_granted("ROLE_USER")',
         'security_message' => 'Seul un utilisateur peut ajouter une facture',
@@ -36,11 +36,13 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
                             'type'       => 'object',
                             'properties' =>
                                 [
+                                    'customer_id' => ['type' => 'int'],
                                     'amount' => ['type' => 'decimal'],
                                     'itemList' => ['type' => 'array'],
                                 ],
                         ],
                         'example' => [
+                            'customer_id' => '1 [ID client]',
                             'amount' => '99.00 [Montant de la facture]',
                             'itemList' => '[1, 2, 3] [array d\'items]'
                         ],
@@ -71,7 +73,7 @@ itemOperations:[
                             'type'       => 'object',
                             'properties' =>
                                 [
-                                    'amount' => ['type' => 'decimal'],
+                                    'amount',
                                     'isArchived' => ['type' => 'boolean'],
                                     'balance' => ['type' => 'decimal'],
                                     'billStatutName' => ['type' => 'int']
@@ -143,14 +145,18 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     #[Groups(['bill:get:read'])]
     private Collection $items;
 
+    #[ORM\ManyToOne(inversedBy: 'bills')]
+    private ?Customer $customer = null;
+
     public function __construct()
     {
+        $dateTimeImmutable = new \DateTimeImmutable();
         $this->billReminders = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->is_archived = false;
-        $this->created_at = new \DateTimeImmutable();
-        $this->from_at = new \DateTimeImmutable();
-        $this->to_at = new \DateTimeImmutable();
+        $this->created_at = $dateTimeImmutable;
+        $this->from_at = $dateTimeImmutable;
+        $this->to_at = $dateTimeImmutable->add(new \DateInterval('P30D'));
     }
 
     public function getId(): ?int
@@ -324,6 +330,18 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
         if ($this->items->removeElement($item)) {
             $item->removeBill($this);
         }
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
 
         return $this;
     }

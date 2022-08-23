@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MembershipRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
 #[ApiResource]
@@ -13,20 +14,31 @@ class Membership
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?\DateTimeImmutable $membership_at = null;
 
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?\DateTimeImmutable $membership_done_at = null;
 
     #[ORM\Column]
+    #[Groups(['customer:get:read'])]
     private ?bool $is_active = null;
 
     #[ORM\OneToOne(inversedBy: 'membership', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
+
+    public function __construct(){
+        $dateTimeImmutable = new \DateTimeImmutable();
+        $this->membership_at = $dateTimeImmutable;
+        $this->membership_done_at = $dateTimeImmutable->add(new \DateInterval('P1Y'));
+        $this->is_active = true;
+    }
 
     public function getId(): ?int
     {
