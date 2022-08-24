@@ -8,7 +8,36 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        'get' => [
+            'openapi_context' => [
+                'summary'     => 'hidden',
+            ]
+        ], 
+        'post' => [
+            'openapi_context' => [
+                'summary'     => 'hidden',
+            ]
+        ], 
+    ],
+    itemOperations:[
+        'put' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut modifier une adhésion',
+            'openapi_context' => [
+                'summary'     => 'Modifie une adhésion d\'un utilisateur',
+            ]
+        ],
+        'get' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut consulter une adhésion',
+            'openapi_context' => [
+                'summary'     => 'hidden',
+            ]
+        ], 
+    ]
+)]
 class Membership
 {
     #[ORM\Id]

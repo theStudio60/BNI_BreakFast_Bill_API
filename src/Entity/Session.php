@@ -3,32 +3,115 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\OInterface\SessionInterface;
 use App\Repository\SessionRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\OInterface\AssociationOwnerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
-class Session implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface
+#[ApiResource(
+    normalizationContext:['groups' => ['session:get:read']],
+    collectionOperations: [
+        'get' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut consulter les session',
+            'openapi_context' => [
+                'summary'     => 'Retourne la liste des sessions',
+            ]
+        ],  
+        'post' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut ajouter une session',
+            'openapi_context' => [
+                'summary'     => 'Créer une nouvelle session',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'dayAt' => ['type' => 'DateTimeImmutable'],
+                                        'toDone' => ['type' => 'boolean'],
+                                        'sessionType_id' => ['type' => 'int']
+                                    ],
+                            ],
+                            'example' => [
+                                'dayAt' => '24.08.2022 18:30:00 [Date et heure de la session]',
+                                'toDone' => 'true [à lieu, true / false]',
+                                'sessionType_id' => '1 [id sessionType] (int)',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    itemOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut consulter les sessions",
+            'openapi_context' => [
+                'summary'     => 'Retourne une session',
+            ]
+        ],
+        'put' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut modifier une session",
+            'openapi_context' => [
+                'summary'     => 'Modifier une session',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'dayAt' => ['type' => 'DateTimeImmutable'],
+                                        'toDone' => ['type' => 'boolean'],
+                                        'sessionType_id' => ['type' => 'int']
+                                    ],
+                            ],
+                            'example' => [
+                                'dayAt' => '24.08.2022 18:30:00 [Date et heure de la session]',
+                                'toDone' => 'true [à lieu, true / false]',
+                                'sessionType_id' => '1 [id sessionType] (int)',
+                            ],
+                        ],
+                    ],
+                ],
+            ],            
+        ]
+    ],
+    )] 
+class Session implements SessionInterface, ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['session:get:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['session:get:read'])]
     private ?\DateTimeImmutable $day_at = null;
 
     #[ORM\Column]
+    #[Groups(['session:get:read'])]
     private ?bool $to_done = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
+    #[Groups(['session:get:read'])]
     private ?User $created_by = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['session:get:read'])]
     private ?SessionType $session_type = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]

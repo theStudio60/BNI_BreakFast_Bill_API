@@ -16,12 +16,39 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     normalizationContext:['groups' => ['user:get:read']],
-    itemOperations:[
-        'put', 'get'
-    ],
+
     collectionOperations:[
-        'post', 'get'
-    ]
+        'post' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut consulter les utilisateurs",
+            'openapi_context' => [
+                'summary'     => 'Créer un utilisateur',
+            ]
+        ],
+        'get' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut consulter les utilisateurs",
+            'openapi_context' => [
+                'summary'     => 'Retourne la liste des utilisateurs',
+            ]
+        ],
+    ],
+    itemOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut consulter un utilisateur",
+            'openapi_context' => [
+                'summary'     => 'Retourne un utilisateur',
+            ]
+        ],
+        'put' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut modifier un utilisateur",
+            'openapi_context' => [
+                'summary'     => 'Modifie un utilisateur',
+            ]
+        ],
+    ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, AssociationOwnerInterface, ForQueryAssociationOwnerInterface
 {
@@ -47,15 +74,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Associa
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:get:read', 'bill:get:read', 'customer:get:read'])]
+    #[Groups(['user:get:read', 'bill:get:read', 'customer:get:read', 'session:get:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:get:read', 'bill:get:read', 'customer:get:read'])]
+    #[Groups(['user:get:read', 'bill:get:read', 'customer:get:read', 'session:get:read'])]
     private ?string $lastname = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'users')]
     #[Groups(['user:get:read'])]
     private ?Association $association = null;
 

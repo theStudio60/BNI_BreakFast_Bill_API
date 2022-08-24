@@ -88,7 +88,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                                 'name' => 'Green Peace',
                                 'street' => 'Rue de la Madelaine',
                                 'streetNumber' => '3A',
-                                'zipCode' => 1000,
+                                'zipCode' => '1000 (int)',
                                 'city' => 'Lausanne',
                                 'email' => 'info@greenpeace.com',
                             ],

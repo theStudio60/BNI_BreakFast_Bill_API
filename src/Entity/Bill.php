@@ -83,7 +83,7 @@ itemOperations:[
                             'amount' => '99.00 [Montant de la facture]',
                             'isArchived' => 'false [Archivée: true ou non archivée: false]',
                             'balance' => '10.00 [Montant partiel dàjà payé ou null]',
-                            'billStatutName' => '1 [1 = En attente ou 2 = Payée]'
+                            'billStatutName' => '1 [1 = En attente ou 2 = Payée] (int)'
                         ],
                     ],
                 ],

@@ -16,10 +16,17 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
 #[ApiResource(
     normalizationContext:['groups' => ['get:read']],
     collectionOperations:[
-        'get',
+        'get' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut consulter les items',
+            'openapi_context' => [
+                'summary'     => 'Consulter les items',
+                'description' => "",
+            ],
+        ],
         'post' => [
             'security' => 'is_granted("ROLE_USER")',
-            'security_message' => 'Seul un administrateur peut ajouter un item',
+            'security_message' => 'Seul un utilisateur peut ajouter un item',
             'openapi_context' => [
                 'summary'     => 'Créer un nouvel item',
                 'description' => "",
@@ -45,8 +52,14 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
         ],
     ],
     itemOperations:[
-        'put',
-        'get'
+        'get' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut consulter un item',
+            'openapi_context' => [
+                'summary'     => 'Consulter un item',
+                'description' => "",
+            ],
+        ]
     ]
 )]
 class Item implements AssociationOwnerInterface, ForQueryAssociationOwnerInterface

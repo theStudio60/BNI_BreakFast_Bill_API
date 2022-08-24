@@ -38,3 +38,9 @@ services:
         class: App\EventListener\JWTExpiredListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
+
+# Permet de chacher une route de la documentation
+    App\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\OpenApi\OpenApiFactory.inner']
+        autoconfigure: false

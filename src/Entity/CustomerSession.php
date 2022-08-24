@@ -7,6 +7,76 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CustomerSessionRepository;
 
 #[ORM\Entity(repositoryClass: CustomerSessionRepository::class)]
+#[ApiResource(
+    normalizationContext:['groups' => ['get:read']],
+    collectionOperations:[
+        'get' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut consulter les sessions utilisateur',
+            'openapi_context' => [
+                'summary'     => 'Retourne la liste des associations',
+            ]
+        ],
+        'post' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'security_message' => 'Seul un utilisateur peut ajouter une session utilisateur',
+            'openapi_context' => [
+                'summary'     => 'Créer une nouvelle association',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+
+                                    ],
+                            ],
+                            'example' => [
+
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    itemOperations:[
+        'get' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut consulter les session utilisateur",
+            'openapi_context' => [
+                'summary'     => 'Retourne une association',
+            ]
+        ],
+        'put' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut modifier les sessions utilisateur",
+            'openapi_context' => [
+                'summary'     => 'Modifier association',
+                'description' => "",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+
+                                    ],
+                            ],
+                            'example' => [
+
+                            ],
+                        ],
+                    ],
+                ],
+            ],            
+        ],
+        'delete'
+    ],
+)]
 class CustomerSession
 {
     #[ORM\Id]
