@@ -42,7 +42,8 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
                                     'zipCode' => ['type' => 'int'],
                                     'city' => ['type' => 'string'],
                                     'company' => ['type' => 'string'],
-                                    'email' => ['type' => 'string']
+                                    'email' => ['type' => 'string'],
+                                    'memberShip_at' => ['type' => 'string']
                                 ],
                         ],
                         'example' => [
@@ -54,6 +55,7 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
                             'city' => 'Lausanne [Ville]',
                             'company' => 'Une entreprise SA [Nom de l\'entreprise]',
                             'email' => 'jdoe@gmail.com [Email]',
+                            'memberShip_at' => '25.08.2022 [Date à laquelle le membre rejoint l\'association] (date dd.mm.yyyy)' 
                         ],
                     ],
                 ],
@@ -150,10 +152,6 @@ class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
     #[Groups(['customer:get:read'])]
     private ?string $email = null;
 
-    #[ORM\Column]
-    #[Groups(['customer:get:read'])]
-    private ?bool $statut = null;
-
     #[ORM\ManyToOne]
     #[Groups(['customer:get:read'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -167,7 +165,8 @@ class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
     #[Groups(['customer:get:read'])]
     private ?Membership $membership = null;
 
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: CustomerSession::class)]
+    #[ORM\OneToMany(mappedBy: 'customer', cascade: ['persist', 'remove'], targetEntity: CustomerSession::class)]
+    #[Groups(['customer:get:read'])]
     private Collection $customerSessions;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Bill::class)]
@@ -177,7 +176,6 @@ class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
     {
         $this->customerSessions = new ArrayCollection();
         $this->bills = new ArrayCollection();
-        $this->statut = true;
     }
 
     public function getId(): ?int
@@ -277,18 +275,6 @@ class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function isStatut(): ?bool
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(bool $statut): self
-    {
-        $this->statut = $statut;
 
         return $this;
     }

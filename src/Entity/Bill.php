@@ -39,12 +39,14 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
                                     'customer_id' => ['type' => 'int'],
                                     'amount' => ['type' => 'decimal'],
                                     'itemList' => ['type' => 'array'],
+                                    'from_at' => ['type' => 'date']
                                 ],
                         ],
                         'example' => [
                             'customer_id' => '1 [ID client]',
                             'amount' => '99.00 [Montant de la facture]',
-                            'itemList' => '[1, 2, 3] [array d\'items]'
+                            'itemList' => '[1, 2, 3] [array d\'items]',
+                            'from_at' => '25.08.2022 [date d\'emission de la facture] (dd.mm.yyyy)'
                         ],
                     ],
                 ],
@@ -148,13 +150,18 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     #[ORM\ManyToOne(inversedBy: 'bills')]
     private ?Customer $customer = null;
 
-    public function __construct()
+    /**
+     * Date à laquelle la facture doit être émise (date : jj.mm.yyyy)
+     *
+     * @param \DateTimeImmutable $bill_at
+     */
+    public function __construct(\DateTimeImmutable $bill_at)
     {
-        $dateTimeImmutable = new \DateTimeImmutable();
+        $dateTimeImmutable = $bill_at;
         $this->billReminders = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->is_archived = false;
-        $this->created_at = $dateTimeImmutable;
+        $this->created_at = new \DateTimeImmutable();
         $this->from_at = $dateTimeImmutable;
         $this->to_at = $dateTimeImmutable->add(new \DateInterval('P30D'));
     }

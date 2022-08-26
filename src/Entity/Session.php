@@ -117,7 +117,7 @@ class Session implements SessionInterface, ForQueryAssociationOwnerInterface
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     private ?Association $association = null;
 
-    #[ORM\OneToMany(mappedBy: 'session', targetEntity: CustomerSession::class)]
+    #[ORM\OneToMany(mappedBy: 'session', cascade: ['persist', 'remove'] , targetEntity: CustomerSession::class)]
     private Collection $customerSessions;
 
     public function __construct()

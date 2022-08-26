@@ -5,10 +5,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CustomerSessionRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerSessionRepository::class)]
 #[ApiResource(
-    normalizationContext:['groups' => ['get:read']],
+    normalizationContext:['groups' => ['customerSessionget:read']],
     collectionOperations:[
         'get' => [
             'security' => 'is_granted("ROLE_USER")',
@@ -30,12 +31,14 @@ use App\Repository\CustomerSessionRepository;
                                 'type'       => 'object',
                                 'properties' =>
                                     [
-
+                                    'session_id' => ['type' => 'int'],
+                                    'is_present' => ['type' => 'boolean']
                                     ],
                             ],
                             'example' => [
-
-                            ],
+                                'session_id' => '1 [ID de la session] (int)',
+                                'is_present' => 'true [Présent ou non (true or false)] (boolean)'
+                                ],
                         ],
                     ],
                 ],
@@ -63,28 +66,39 @@ use App\Repository\CustomerSessionRepository;
                                 'type'       => 'object',
                                 'properties' =>
                                     [
-
+                                        'session_id' => ['type' => 'int'],
+                                        'is_present' => ['type' => 'boolean']
                                     ],
                             ],
                             'example' => [
-
+                                'session_id' => '1 [ID de la session] (int)',
+                                'is_present' => 'true [Présent ou non (true or false)] (boolean)'
                             ],
                         ],
                     ],
                 ],
             ],            
         ],
-        'delete'
-    ],
+        'delete' => [
+            "security" => "is_granted('ROLE_USER')",
+            "security_message" => "Seul un utilisateur peut supprimer les sessions utilisateur",
+            'openapi_context' => [
+                'summary'     => 'Supprime une session utilisateur',
+                'description' => "",
+            ]
+        ],
+    ]
 )]
 class CustomerSession
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['customerSessionget:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'customerSessions')]
+    #[Groups(['customerSessionget:read'])]
     private ?Session $session = null;
 
     #[ORM\ManyToOne(inversedBy: 'customerSessions')]
@@ -92,11 +106,17 @@ class CustomerSession
     private ?Customer $customer = null;
 
     #[ORM\Column]
+    #[Groups(['customerSessionget:read'])]
     private ?bool $is_present = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function __construct()
+    {
+        $this->is_present = true;
     }
 
     public function getSession(): ?Session

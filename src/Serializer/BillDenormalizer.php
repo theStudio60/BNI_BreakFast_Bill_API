@@ -4,13 +4,14 @@ namespace App\Serializer;
 
 use App\Entity\BillStatut;
 use App\OInterface\BillInterface;
+use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
+use App\Repository\CustomerRepository;
 use App\Repository\BillStatutRepository;
 use App\Repository\BillStatutNameRepository;
-use App\Repository\CustomerRepository;
-use App\Repository\ItemRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
@@ -68,6 +69,10 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
             if(isset($context['collection_operation_name']) && $context['collection_operation_name'] === 'post')
             {
                 $context[$this->allReadyCalledKey($type)] = true;
+                
+                //Bill constructor
+                $date = new \DateTimeImmutable($data['from_at']);
+                $context[AbstractNormalizer::DEFAULT_CONSTRUCTOR_ARGUMENTS] = [$type => ['bill_at' => $date]];
                 //crée l'objet Bill
                 $bill = $this->denormalizer->denormalize($data, $type, $format, $context);
                 //Chargement de l'utilisateur courant

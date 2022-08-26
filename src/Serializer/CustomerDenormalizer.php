@@ -2,9 +2,11 @@
 
 namespace App\Serializer;
 
+use App\Entity\CustomerSession;
 use App\Entity\Membership;
 use App\Repository\UserRepository;
 use App\OInterface\CustomerInterface;
+use App\Repository\SessionRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -14,8 +16,11 @@ class CustomerDenormalizer implements ContextAwareDenormalizerInterface, Denorma
 
     use DenormalizerAwareTrait;
 
-	function __construct(private Security $security, private UserRepository $userRepository) {
-	}    
+	function __construct(
+            private Security $security, 
+            private UserRepository $userRepository,
+            private SessionRepository $sessionRepository
+    ) {}    
 /**
  * Undocumented function
  *
@@ -55,12 +60,28 @@ class CustomerDenormalizer implements ContextAwareDenormalizerInterface, Denorma
         $customer = $this->denormalizer->denormalize($data, $type, $format, $context);
 
         $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()]);
-        $asssociation = $user->getAssociation() ;        
-
+        $asssociation = $user->getAssociation() ;
+        $memberShipAt = new \DateTimeImmutable($data['memberShip_at']);
             //set des valeurs
             $customer->setAssociation($asssociation);
             $customer->setCreatedBy($user);
-            $customer->setMembership(new Membership());
+            $customer->setMembership(new Membership($memberShipAt));
+        
+    //ajout du customers aux futures sessions
+        //selection des session disponible entre le membership et la date de la session
+        $sessions = $this->sessionRepository->findByAtDone(
+            $asssociation,
+            $customer->getMembership()->getMembershipAt(),
+            $customer->getMembership()->getMembershipDoneAt()
+        );
+            foreach ($sessions as $key => $value) {
+                $customerSession = new CustomerSession();
+                $customerSession
+                    ->setCustomer($customer)
+                    ->setSession($value);
+                $customer->addCustomerSession($customerSession);
+            }
+
 
         return $customer;
     }

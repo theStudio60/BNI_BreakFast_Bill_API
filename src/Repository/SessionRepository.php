@@ -39,20 +39,21 @@ class SessionRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Session[] Returns an array of Session objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return Session[] Returns an array of Session objects
+    */
+   public function findByAtDone($association, $dateAt, $dateDone): array
+   {
+       return $this->createQueryBuilder('s')
+           ->andWhere('s.association = :association')
+           ->andWhere('s.day_at >= :dateAt')
+           ->andWhere('s.day_at <= :dateDone')
+           ->setParameters(['association' => $association, 'dateAt' => $dateAt, 'dateDone' => $dateDone])
+           ->orderBy('s.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    public function findOneBySomeField($value): ?Session
 //    {

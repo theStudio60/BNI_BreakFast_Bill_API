@@ -2,8 +2,10 @@
 
 namespace App\Serializer;
 
+use App\Entity\CustomerSession;
 use App\Repository\UserRepository;
 use App\OInterface\SessionInterface;
+use App\Repository\CustomerRepository;
 use App\Repository\SessionTypeRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +20,8 @@ class SessionDenormalizer implements ContextAwareDenormalizerInterface, Denormal
 	function __construct(
         private Security $security, 
         private UserRepository $userRepository,
-        private SessionTypeRepository $sessionTypeRepository
+        private SessionTypeRepository $sessionTypeRepository,
+        private CustomerRepository $customerRepository
     ) {
 	}    
 /**
@@ -60,9 +63,10 @@ class SessionDenormalizer implements ContextAwareDenormalizerInterface, Denormal
         $session = $this->denormalizer->denormalize($data, $type, $format, $context);
 
         $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()]);
-        $asssociation = $user->getAssociation() ; 
+        $asssociation = $user->getAssociation() ;
         $sessionType = $this->sessionTypeRepository->findOneBy(['id' => $data['sessionType_id'], 'association' => $asssociation]);
         $date = new \DateTimeImmutable($data['dayAt']);
+        $customers = $this->customerRepository->findBy(['association' => $asssociation]);
         //controle que la sessionType existe bien
         if($sessionType === null){
             return new JsonResponse(['error' => 'SessionType inexistante', 'status' => 404], 404); 
@@ -73,7 +77,18 @@ class SessionDenormalizer implements ContextAwareDenormalizerInterface, Denormal
                 ->setCreatedBy($user)
                 ->setSessionType($sessionType)
                 ->setDayAt($date);
-
+        
+        foreach ($customers as $key => $customer) {
+            //on control que le membership soit bien actif pour la date de la session puis on l'ajoute
+            if($customer->getMembership()->getMembershipDoneAt() > $data && $customer->getMembership()->getMembershipAt() < $date){
+                $customerSession = new CustomerSession();
+                $customerSession
+                    ->setCustomer($customer)
+                    ->setIsPresent(true)
+                    ->setSession($session);
+                $session->addCustomerSession($customerSession);
+            }
+        }
         return $session;
     }
 

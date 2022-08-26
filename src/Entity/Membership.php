@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MembershipRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTimeImmutable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
@@ -62,8 +63,13 @@ class Membership
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
-    public function __construct(){
-        $dateTimeImmutable = new \DateTimeImmutable();
+    /**
+     * Doit contenir la date depuis laquelle le customer et membre
+     *
+     * @param DateTimeImmutable $memberShipTo
+     */
+    public function __construct(DateTimeImmutable $memberShipTo){
+        $dateTimeImmutable = $memberShipTo;
         $this->membership_at = $dateTimeImmutable;
         $this->membership_done_at = $dateTimeImmutable->add(new \DateInterval('P1Y'));
         $this->is_active = true;

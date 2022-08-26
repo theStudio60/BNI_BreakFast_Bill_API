@@ -76,7 +76,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
                                 'type'       => 'object',
                                 'properties' =>
                                     [
-                                        'name' => ['type' => 'string'],
                                         'street' => ['type' => 'string'],
                                         'streetNumber' => ['type' => 'string'],
                                         'zipCode' => ['type' => 'int'],
@@ -85,7 +84,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
                                     ],
                             ],
                             'example' => [
-                                'name' => 'Green Peace',
                                 'street' => 'Rue de la Madelaine',
                                 'streetNumber' => '3A',
                                 'zipCode' => '1000 (int)',
