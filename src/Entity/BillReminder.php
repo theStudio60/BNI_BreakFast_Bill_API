@@ -5,10 +5,51 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BillReminderRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\OInterface\AssociationOwnerInterface;
+use App\OInterface\BillReminderInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BillReminderRepository::class)]
-class BillReminder
+#[ApiResource( 
+    collectionOperations:[
+    'post' => [
+        'security' => 'is_granted("ROLE_USER")',
+        'security_message' => 'Seul un utilisateur peut créer un rappel',
+        'openapi_context' => [
+            'summary'     => 'Créer un nouveau rappel',
+            'description' => "",
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema'  => [
+                            'type'       => 'object',
+                            'properties' =>
+                                [
+                                    'bill_id' => ['type' => 'int'],
+                                    'billReminderCondition_id' => ['type' => 'int'],
+                                ],
+                        ],
+                        'example' => [
+                            'bill_id' => '1 [ID de la facture](int)',
+                            'billReminderCondition_id' => '1 [ID de billReminderCondition](int)',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+],
+itemOperations:[
+    'get' => [
+        "security" => "is_granted('ROLE_USER')",
+        "security_message" => "Seul un utilisateur peut consulter un rappel",
+        'openapi_context' => [
+            'summary'     => 'Retourne un rappel',
+        ]
+    ],
+],
+)]
+class BillReminder implements BillReminderInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,6 +67,9 @@ class BillReminder
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['bill:get:read'])]
     private ?BillReminderCondition $bill_reminder_condition = null;
+
+    #[ORM\ManyToOne]
+    private ?User $createdBy = null;
 
     public function getId(): ?int
     {
@@ -64,6 +108,18 @@ class BillReminder
     public function setBillReminderCondition(?BillReminderCondition $bill_reminder_condition): self
     {
         $this->bill_reminder_condition = $bill_reminder_condition;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
