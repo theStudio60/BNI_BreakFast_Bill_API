@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Bill;
 use Fpdf\Fpdf;
+use App\Entity\Bill;
 use Sprain\SwissQrBill\QrBill;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -178,7 +178,7 @@ const ST_ALIGN_RIGHT =
 
 
 #[Route(path: '/getQR', name: '')]
-public function getQr(){
+public function getQrImage(){
             // This is an example how to create a typical qr bill:
         // - with reference number
         // - with known debtor
@@ -259,13 +259,17 @@ public function getQr(){
             exit;
         }
 
+        return $qrBill;
+    }
 
-        // 2. Create an FPDF instance (or use an existing one from your project)
-        $fpdf = new Fpdf('P', 'mm', 'A4');
+    #[Route(path: '/getQR', name: '')]
+    public function getQr(){
+
+        $fpdf = new Fpdf("P", "mm", "A4");
         $fpdf->AddPage();
 
         // 3. Create a full payment part for FPDF
-        $output = new FpdfOutput($qrBill, 'en', $fpdf);
+        $output = new FpdfOutput($this->getQrImage(), 'en', $fpdf);
         $output
             ->setPrintable(false)
             ->getPaymentPart();
