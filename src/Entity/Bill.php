@@ -37,14 +37,14 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
                             'properties' =>
                                 [
                                     'customer_id' => ['type' => 'int'],
-                                    'amount' => ['type' => 'decimal'],
+                                    'billing_month' => ['type' => 'int'],
                                     'itemList' => ['type' => 'array'],
                                     'from_at' => ['type' => 'date']
                                 ],
                         ],
                         'example' => [
                             'customer_id' => '1 [ID client]',
-                            'amount' => '99.00 [Montant de la facture]',
+                            'billing_month' => '10-2022 [mois de la facturation - année]',
                             'itemList' => '[1, 2, 3] [array d\'items]',
                             'from_at' => '25.08.2022 [date d\'emission de la facture] (dd.mm.yyyy)'
                         ],
@@ -78,14 +78,12 @@ itemOperations:[
                                     'amount',
                                     'isArchived' => ['type' => 'boolean'],
                                     'balance' => ['type' => 'decimal'],
-                                    'billStatutName' => ['type' => 'int']
                                 ],
                         ],
                         'example' => [
                             'amount' => '99.00 [Montant de la facture]',
                             'isArchived' => 'false [Archivée: true ou non archivée: false]',
-                            'balance' => '10.00 [Montant partiel dàjà payé ou null]',
-                            'billStatutName' => '1 [1 = En attente ou 2 = Payée] (int)'
+                            'balance' => '10.00 [Montant dàjà payé (partiel ou complet) ou null (si rien payé)]',
                         ],
                     ],
                 ],
@@ -149,6 +147,9 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
 
     #[ORM\ManyToOne(inversedBy: 'bills')]
     private ?Customer $customer = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $billingMonth = null;
 
     /**
      * Date à laquelle la facture doit être émise (date : jj.mm.yyyy)
@@ -349,6 +350,18 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getBillingMonth(): ?string
+    {
+        return $this->billingMonth;
+    }
+
+    public function setBillingMonth(?string $billingMonth): self
+    {
+        $this->billingMonth = $billingMonth;
 
         return $this;
     }

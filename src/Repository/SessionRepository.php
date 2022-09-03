@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Session;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Customer;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Session>
@@ -54,14 +55,4 @@ class SessionRepository extends ServiceEntityRepository
            ->getResult()
        ;
    }
-
-//    public function findOneBySomeField($value): ?Session
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

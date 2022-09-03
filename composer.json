@@ -8,10 +8,12 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^2.6",
+        "beberlei/doctrineextensions": "^1.3",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.13",
+        "fpdf/fpdf": "^1.84",
         "lexik/jwt-authentication-bundle": "^2.16",
         "nelmio/cors-bundle": "^2.2",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -33,8 +35,7 @@
         "symfony/security-bundle": "6.0.*",
         "symfony/serializer": "6.0.*",
         "symfony/validator": "6.0.*",
-        "symfony/yaml": "6.0.*",
-        "fpdf/fpdf": "^1.84"
+        "symfony/yaml": "6.0.*"
     },
     "config": {
         "allow-plugins": {

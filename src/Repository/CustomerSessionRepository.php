@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Customer;
 use App\Entity\CustomerSession;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<CustomerSession>
@@ -39,20 +40,22 @@ class CustomerSessionRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return CustomerSession[] Returns an array of CustomerSession objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findByMonth(Customer $customer, int $month, $year = null): array
+    {
+        if($year === null){
+            $year = date('Y');
+        }
+     return $this->createQueryBuilder('c')
+     ->join('c.session', 's')
+     ->andWhere('c.customer = :customer')
+     ->andWhere('MONTH(s.day_at) = :month')
+     ->andWhere('YEAR(s.day_at) = :year')
+     ->setParameters(['customer' => $customer, 'month' => $month, 'year' => $year])
+     ->orderBy('c.id', 'ASC')
+     ->getQuery()
+     ->getResult()
+ ;
+    }
 
 //    public function findOneBySomeField($value): ?CustomerSession
 //    {

@@ -161,6 +161,9 @@ class Association
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Session::class)]
     private Collection $sessions;
 
+    #[ORM\OneToOne(mappedBy: 'association', cascade: ['persist', 'remove'])]
+    private ?BankInformation $bankInformation = null;
+
     public function __construct()
     {
         $this->bills = new ArrayCollection();
@@ -480,6 +483,23 @@ class Association
                 $session->setAssociation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBankInformation(): ?BankInformation
+    {
+        return $this->bankInformation;
+    }
+
+    public function setBankInformation(BankInformation $bankInformation): self
+    {
+        // set the owning side of the relation if necessary
+        if ($bankInformation->getAssociation() !== $this) {
+            $bankInformation->setAssociation($this);
+        }
+
+        $this->bankInformation = $bankInformation;
 
         return $this;
     }

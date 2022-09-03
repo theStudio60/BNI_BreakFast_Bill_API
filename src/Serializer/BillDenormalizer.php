@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\BillStatutRepository;
 use App\Repository\BillStatutNameRepository;
+use App\Repository\CustomerSessionRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -27,6 +28,7 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
         private BillStatutRepository $billStatutRepository, 
         private ItemRepository $itemRepository,
         private CustomerRepository $customerRepository,
+        private CustomerSessionRepository $customerSessionRepository
     ) {
 	}    
 /**
@@ -88,6 +90,21 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
                     return new JsonResponse(['error' => 'customer inexistant', 'status' => 404], 404);
                 }
 
+                $billingDate = \explode('-', $data['billing_month']);
+                if((int)$billingDate[0] > 12 || (int)$billingDate[0] < 1 ){
+                    return new JsonResponse(['error' => 'le mois n\'est pas valable (int) de 1 à 12', 'status' => 404], 404);
+                }
+                if((int)$billingDate[1] < 2000 || (int)$billingDate[1] > date('Y')){
+                    return new JsonResponse(['error' => 'la date doit ce situer après 2000 et ne peut être dans le future', 'status' => 404], 404);
+                }                
+
+                //Selection des session à facturer dans le mois
+                $total = null;
+                $customerSessions = $this->customerSessionRepository->findByMonth($customer, (int)$billingDate[0]);
+                foreach ($customerSessions as $key => $value) {
+                    $total += $value->getSession()->getSessionType()->getPriceOf();
+                }
+
                 //Set des valeurs necessaire 
                 $billStatut = new BillStatut();   
                     $billStatut
@@ -99,7 +116,8 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
                         ->setAssociation($asssociation)
                         ->setCreatedBy($user)
                         ->setCustomer($customer)
-                        ->setBillStatut($billStatut);
+                        ->setBillStatut($billStatut)
+                        ->setBillingMonth($data['billing_month']);
                     
                     //ajout des items
                     foreach ($data['itemList'] as $key => $value) {
@@ -107,12 +125,19 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
                         $item = $this->itemRepository->findOneBy(['id' => $value, 'association' => $user->getAssociation()]);
                         if($item != null){
                             $bill->addItem($item);
+                            $total += $item->getPriceOf();
                         }
 
                     }
+                    $bill->setAmount($total);
                 //retourne l'objet avec les valeurs ajoutée
                 return $bill;
             }
+
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
 
             //si la requete est de type item_operation_name->PUT (mise à jour)
             if(isset($context['item_operation_name']) && $context['item_operation_name'] === 'put')
@@ -121,10 +146,15 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
                 //crée l'objet Bill
                 $bill = $this->denormalizer->denormalize($data, $type, $format, $context);
 
-                //on récupère le nom du statut
-                $billStatutName = $this->billStatutNameRepository->findOneBy(['id' => $data['billStatutName']]);
                 //on récupère le statut
                 $billStatut = $this->billStatutRepository->findOneBy(['id' => $bill->getBillStatut()]);
+
+                //si le montant de la facture corresopond au montant de la balance, la facture est payée
+                if($bill->getAmount() == $billStatut->getBalance()+$data['balance']){
+                    $billStatutName = $this->billStatutNameRepository->findOneBy(['id' => 2]); //on met le statut comme payé
+                }else{
+                    $billStatutName = $billStatut->getBillStatutName(); //sinon on laisse le statut actuel
+                }
                     //Set des valeurs necessaire 
                     $bill
                         ->setAmount($data['amount'])

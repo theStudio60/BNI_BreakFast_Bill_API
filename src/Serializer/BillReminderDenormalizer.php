@@ -112,7 +112,9 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
                 ->setCreatedBy($user);
 
             $bill
-                ->setReminderNumber($bill->getReminderNumber()+1);
+                ->setReminderNumber($bill->getReminderNumber()+1)
+                //ajout des frais de rappel au montant total de la facture
+                ->setAmount($bill->getAmount()+$billReminderCondition->getAddAmount());
             
             $bill->getBillStatut()->setBillStatutName(
                 $this->billStatutNameRepository->findOneBy(['id' => 3])
