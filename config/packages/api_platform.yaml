@@ -1,5 +1,5 @@
 api_platform:
-    title: 'BMI API'
+    title: 'BNI API'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
@@ -11,3 +11,11 @@ api_platform:
                 name: Authorization
                 type: header        
     show_webby: false
+
+    defaults:
+        pagination_client_items_per_page: true
+    collection:
+        pagination:
+            items_per_page_parameter_name: itemsPerPage # Default value
+            maximum_items_per_page: 30
+            items_per_page: 15

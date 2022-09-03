@@ -6,13 +6,16 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\OInterface\BillInterface;
 use App\Repository\BillRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
+#[ApiFilter(SearchFilter::class, properties:['is_archived' => 'exact', 'billStatut.bill_statut_name.id' => 'exact'])]
 #[ApiResource( 
     normalizationContext:['groups' => ['bill:get:read']],
     collectionOperations:[

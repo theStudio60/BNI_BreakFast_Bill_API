@@ -2,18 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping as ORM;
 use App\OInterface\CustomerInterface;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ApiFilter(SearchFilter::class, properties:['firstname' => 'partial', 'lastname' => 'partial', 'membership.is_active' => 'partial'])]
 #[ApiResource(
     normalizationContext:['groups' => ['customer:get:read']],
+    attributes: ["pagination_items_per_page" => 10, "pagination_maximum_items_per_page" => 30],
     collectionOperations:[
     'get' => [
         'security' => 'is_granted("ROLE_USER")',

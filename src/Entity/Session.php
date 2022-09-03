@@ -5,15 +5,21 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\OInterface\SessionInterface;
 use App\Repository\SessionRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
+#[ApiFilter(SearchFilter::class, properties:['day_at' => 'partial'])]
+#[ApiFilter(DateFilter::class, properties:['day_at'])]
 #[ApiResource(
     normalizationContext:['groups' => ['session:get:read']],
+    attributes: ["pagination_items_per_page" => 10, "pagination_maximum_items_per_page" => 30],
     collectionOperations: [
         'get' => [
             'security' => 'is_granted("ROLE_USER")',
