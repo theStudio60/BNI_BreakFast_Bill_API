@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace App\Service;
 
 use Fpdf\Fpdf;
 use App\Entity\Bill;
 use App\Entity\BillReminder;
 use Sprain\SwissQrBill\QrBill;
 use App\Repository\CustomerSessionRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Service\DateConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sprain\SwissQrBill\DataGroup\Element\CombinedAddress;
 use Sprain\SwissQrBill\DataGroup\Element\PaymentReference;
@@ -17,20 +16,40 @@ use Sprain\SwissQrBill\DataGroup\Element\CreditorInformation;
 use Sprain\SwissQrBill\Reference\QrPaymentReferenceGenerator;
 use Sprain\SwissQrBill\DataGroup\Element\AdditionalInformation;
 use Sprain\SwissQrBill\PaymentPart\Output\FpdfOutput\FpdfOutput;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sprain\SwissQrBill\DataGroup\Element\PaymentAmountInformation;
 
-class ReminderController extends AbstractController
+class ReminderService
 {
 
     public function __construct(
-        public CustomerSessionRepository $customerSessionRepository
+        public CustomerSessionRepository $customerSessionRepository,
+        public DateConverter $dateConverter,
+        
     ){}
 
-    #[Route('/getPdfReminder/{id}', name: 'getPdfReminder')]
+/**
+ * Creer un rappel en PDF et l'enregistre dans le dossier client "/bills/nomclient/nomFacture.pdf"
+ *
+ * @param BillReminder $billReminder
+ * @return true si ok sinon une Réponse Json
+ */
     public function getPdfReminder(BillReminder $billReminder)
     {
+
         $bill = $billReminder->getBill();
+
+        // nom du fichier final
+        $nom_file = $this->getReminderNumber($bill).".pdf";
+
+        //si le dossier client n'existe pas encore on le créer
+        $dossier = $bill->getCustomer()->getId().$bill->getCustomer()->getCompany();
+            if(!is_dir('bills/'.$dossier))mkdir('bills/'.$dossier);
+
+        //on controlle que le rappel n'aille pas déjà été generée
+        if(file_exists('bills/'.$dossier.'/'.$nom_file)){
+            return new JsonResponse(['message' => "Le rappel à déjà été créer", 'code' => 500], 500);
+        }   
+;
         //date de la facture
         $billingDate = explode('-', $bill->getBillingMonth()); //0 = mois, 1 = année
         $currency = $bill->getAssociation()->getBankInformation()->getCurrency();
@@ -49,7 +68,7 @@ class ReminderController extends AbstractController
         $nom_file = $this->getReminderNumber($bill).".pdf";
         
         // logo : 65 de largeur et 30 de hauteur
-        $pdf->Image('./img/logo.jpg', 10, 10, 65, 30);
+        $pdf->Image('./img/logos/'.$bill->getAssociation()->getLogoImg(), 10, 10, 65, 30);
         
         //Numéro de facture
         $num_fact = utf8_decode($this->getReminderNumber($bill));
@@ -76,8 +95,11 @@ class ReminderController extends AbstractController
         $pdf->SetXY( $x, $y ); $pdf->Cell( 100, 8, utf8_decode($bill->getCustomer()->getZipCode().' '.$bill->getCustomer()->getCity()), 0, 0, ''); $y += 4;
     
         // Indication periode de facturation
-        $pdf->SetFont( $police, "BU", 11); $pdf->SetXY( 5, 82 ); 
-        $pdf->Cell($pdf->GetStringWidth('Rappel '.$this->NameOfMonth((int)$billingDate[0])), 0, utf8_decode('Rappel '.$this->NameOfMonth((int)$billingDate[0])), 0, "L");
+        $pdf->SetFont( $police, "BU", 11); $pdf->SetXY( 5, 77 ); 
+        $pdf->Cell($pdf->GetStringWidth('Rappel '.$this->dateConverter->NameOfMonth((int)$billingDate[0])), 0, utf8_decode('Rappel '.$this->dateConverter->NameOfMonth((int)$billingDate[0])), 0, "L");
+        $pdf->SetFont( $police, "", 11); $pdf->SetXY( 5, 82 ); 
+        $pdf->Cell($pdf->GetStringWidth($billReminder->getBillReminderCondition()->getDescription()), 0, utf8_decode($billReminder->getBillReminderCondition()->getDescription()), 0, "L");
+        
     
         // ***********************
         // le cadre des articles
@@ -123,13 +145,13 @@ class ReminderController extends AbstractController
             //affichage des conditions de rappel
             $pdf->Line(5, $y+14, 205, $y+14);
             $y += 6;
-            $pdf->SetXY(10, $y+9 ); $pdf->Cell( 106, 5, utf8_decode($billReminder->getBillReminderCondition()->getDescription()), 0, 0, 'L');
-            $pdf->SetXY( 106, $y+9 ); $pdf->Cell( 33, 5, utf8_decode($currency.' '.$billReminder->getBillReminderCondition()->getAddAmount()), 3, ' ', true, 0, 0, 'R');
+            $pdf->SetXY(10, $y+9 ); $pdf->Cell( 106, 5, utf8_decode('Frais de rappel'), 0, 0, 'L');
+            $pdf->SetXY( 106, $y+9 ); $pdf->Cell( 33, 5, utf8_decode($currency.' '.$bill->getReminderAmount()), 3, ' ', true, 0, 0, 'R');
             $pdf->SetXY( 139, $y+9 ); $pdf->Cell( 33, 5, utf8_decode(1), 0, 0, 'C');
-            $pdf->SetXY( 172, $y+9 ); $pdf->Cell( 33, 5, utf8_decode($currency.' '.$billReminder->getBillReminderCondition()->getAddAmount()), 0, 0, 'R');
+            $pdf->SetXY( 172, $y+9 ); $pdf->Cell( 33, 5, utf8_decode($currency.' '.$bill->getReminderAmount()), 0, 0, 'R');
             $pdf->Line(5, $y+14, 205, $y+14);            
             $y += 6;            
-            $total += $billReminder->getBillReminderCondition()->getAddAmount();  
+            $total += $bill->getReminderAmount();  
             
             //on déduit ce qui à éventuellement déjà été payé
             if($bill->getBillStatut()->getBalance() != null){
@@ -174,11 +196,15 @@ class ReminderController extends AbstractController
             ->setPrintable(false)
             ->getPaymentPart();
     
-            if($total != $bill->getAmount()-$bill->getBillStatut()->getBalance()){
+            if($total != (($bill->getAmount()+$bill->getReminderAmount())-$bill->getBillStatut()->getBalance())){
                 $amount = $bill->getAmount();
-                return new JsonResponse(['error' => "Le montant de la facture ($amount) ne corespond pas au calcul actuelle ($total). Solution: re-generer la facture manuellement.", 'status' => 404], 404);
+                return new JsonResponse(['message' => "Le montant du rappel ($amount) ne corespond pas au calcul actuelle ($total). Solution: re-generer le rappel manuellement.", 'code' => 500], 500);
             }
-    $pdf->Output("I", $nom_file);
+
+        //on créer le rappel
+        $pdf->Output("F", 'bills/'.$dossier.'/'.$nom_file);
+        return true;
+
         }
     
     
@@ -252,17 +278,7 @@ class ReminderController extends AbstractController
     
         return $qrBill;
     }    
-    
-    /**
-     * Retourne le nom d'un mois en Français
-     *
-     * @param integer $month
-     * @return string
-     */
-    public function NameOfMonth(int $month): string{
-        $monthName = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-        return $monthName[$month];
-    }
+
     
     /**
      * Retourne un numero de facture

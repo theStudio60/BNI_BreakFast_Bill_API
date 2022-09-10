@@ -73,11 +73,11 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
         $billReminderCondition = $this->billReminderConditionRepository->findOneBy(['id' => $data['billReminderCondition_id'], 'association' => $user->getAssociation()]);
 
             if($bill === null){
-                $data = ['error' => 500, 'message' => 'Facture introuvable.'];
+                $data = ['code' => 500, 'message' => 'Facture introuvable.'];
                 return new JsonResponse($data, 500); 
             } 
             if($billReminderCondition === null){
-                $data = ['error' => 500, 'message' => 'Condition de rappel introuvable.'];
+                $data = ['code' => 500, 'message' => 'Condition de rappel introuvable.'];
                 return new JsonResponse($data, 500); 
             }     
 
@@ -85,7 +85,7 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
 
         //controle de la date d'échéance de la facture
         if($bill->getToAt() > $now){
-            $data = ['error' => 406, 'message' => 'La date d\'échéance n\'est pas encore atteinte.'];
+            $data = ['code' => 406, 'message' => 'La date d\'échéance n\'est pas encore atteinte.'];
             return new JsonResponse($data, 406);
         }  
 
@@ -97,7 +97,7 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
                 $endDateReminder = $value->getReminderAt()->add(new \DateInterval('P'.$value->getBillReminderCondition()->getDayForPaid().'D'));
 
                 if($endDateReminder > $now){
-                    $data = ['status' => 406, 'message' => 'La date d\'échéance du rappel n\'est pas encore atteinte.'];
+                    $data = ['code' => 406, 'message' => 'La date d\'échéance du rappel n\'est pas encore atteinte.'];
                     return new JsonResponse($data, 406);
                 }   
 
@@ -113,13 +113,11 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
 
             $bill
                 ->setReminderNumber($bill->getReminderNumber()+1)
-                //ajout des frais de rappel au montant total de la facture
-                ->setAmount($bill->getAmount()+$billReminderCondition->getAddAmount());
+                ->setReminderAmount($bill->getReminderAmount()+$billReminderCondition->getAddAmount());
             
             $bill->getBillStatut()->setBillStatutName(
                 $this->billStatutNameRepository->findOneBy(['id' => 3])
-            );
-                
+            );                
 
         return $billReminder;
     }

@@ -1,8 +1,9 @@
 <?php
-namespace App\Controller;
+namespace App\Service;
 
 use Fpdf\Fpdf;
 use App\Entity\Bill;
+use App\Service\DateConverter;
 use Sprain\SwissQrBill\QrBill;
 use App\Repository\CustomerSessionRepository;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,16 +18,34 @@ use Sprain\SwissQrBill\PaymentPart\Output\FpdfOutput\FpdfOutput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sprain\SwissQrBill\DataGroup\Element\PaymentAmountInformation;
 
-class BillingController extends AbstractController
+class BillingService
 {
 
     public function __construct(
-        public CustomerSessionRepository $customerSessionRepository
+        public CustomerSessionRepository $customerSessionRepository,
+        public DateConverter $dateConverter
     ){}
     
-    #[Route('/getPdfBill/{id}', name: 'getPdfBill')]
+    
+    /**
+     * Creer une facture en PDF et l'enregistre dans le dossier client "/bills/nomclient/nomFacture.pdf"
+     *
+     * @param Bill $bill
+     * @return true si ok sinon une Réponse Json
+     */
     public function getPdfBill(Bill $bill)
     {
+        // nom du fichier final
+        $nom_file = $this->getBillNumber($bill).".pdf";
+
+        //si le dossier client n'existe pas encore on le créer
+        $dossier = $bill->getCustomer()->getId().$bill->getCustomer()->getCompany();
+            if(!is_dir('bills/'.$dossier))mkdir('bills/'.$dossier);
+
+        //on controlle que la facture n'aille pas déjà été generée
+        if(file_exists('bills/'.$dossier.'/'.$nom_file)){
+            return new JsonResponse(['message' => "La facture à déjà été créer", 'code' => 500], 500);
+        }        
 
     //date de la facture
     $billingDate = explode('-', $bill->getBillingMonth()); //0 = mois, 1 = année
@@ -41,12 +60,9 @@ class BillingController extends AbstractController
     $pdf->SetMargins(0,0,0);
 
     $pdf->AddPage();
-
-    // nom du fichier final
-    $nom_file = $this->getBillNumber($bill).".pdf";
     
     // logo : 65 de largeur et 30 de hauteur
-    $pdf->Image('./img/logo.jpg', 10, 10, 65, 30);
+    $pdf->Image('./img/logos/'.$bill->getAssociation()->getLogoImg(), 10, 10, 65, 30);
     
     //Numéro de facture
     $num_fact = utf8_decode($this->getBillNumber($bill));
@@ -73,7 +89,7 @@ class BillingController extends AbstractController
 
     // Indication periode de facturation
     $pdf->SetFont( $police, "BU", 11); $pdf->SetXY( 5, 82 ); 
-    $pdf->Cell($pdf->GetStringWidth('Facturation '.$this->NameOfMonth((int)$billingDate[0])), 0, 'Facturation '.$this->NameOfMonth((int)$billingDate[0]), 0, "L");
+    $pdf->Cell($pdf->GetStringWidth('Facturation '.$this->dateConverter->NameOfMonth((int)$billingDate[0])), 0, utf8_decode('Facturation '.$this->dateConverter->NameOfMonth((int)$billingDate[0])), 0, "L");
 
     // ***********************
     // le cadre des articles
@@ -148,10 +164,14 @@ class BillingController extends AbstractController
         ->setPrintable(false)
         ->getPaymentPart();
 
+
         if($total != $bill->getAmount()){
-            return new JsonResponse(['error' => 'Le montant de la facture ne corespond pas au calcul actuelle. Solution: re-generer la facture manuellement.', 'status' => 404], 404);
+            return new JsonResponse(['message' => 'Le montant de la facture ('.$bill->getAmount().') ne corespond pas au calcul actuelle ('.$total.'). Solution: re-generer la facture manuellement.', 'code' => 404], 404);
         }
-$pdf->Output("I", $nom_file);
+
+            //on créer la facture
+            $pdf->Output("F", 'bills/'.$dossier.'/'.$nom_file);
+            return true;
     }
 
 
@@ -226,16 +246,6 @@ $pdf->Output("I", $nom_file);
     return $qrBill;
 }    
 
-/**
- * Retourne le nom d'un mois en Français
- *
- * @param integer $month
- * @return string
- */
-public function NameOfMonth(int $month): string{
-    $monthName = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-    return $monthName[$month];
-}
 
 /**
  * Retourne un numero de facture

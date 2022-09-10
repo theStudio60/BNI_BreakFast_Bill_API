@@ -15,8 +15,8 @@ lexik_jwt_authentication:
             name:    BEARER
         # check token in query string parameter
         query_parameter:
-            enabled: false
-            name:    bearer
+            enabled: true
+            name:    jwt
         # check token in a cookie
         split_cookie:
             enabled: false

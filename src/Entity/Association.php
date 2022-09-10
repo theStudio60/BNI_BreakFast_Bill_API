@@ -164,6 +164,9 @@ class Association
     #[ORM\OneToOne(mappedBy: 'association', cascade: ['persist', 'remove'])]
     private ?BankInformation $bankInformation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $logoImg = null;
+
     public function __construct()
     {
         $this->bills = new ArrayCollection();
@@ -500,6 +503,18 @@ class Association
         }
 
         $this->bankInformation = $bankInformation;
+
+        return $this;
+    }
+
+    public function getLogoImg(): ?string
+    {
+        return $this->logoImg;
+    }
+
+    public function setLogoImg(?string $logoImg): self
+    {
+        $this->logoImg = $logoImg;
 
         return $this;
     }

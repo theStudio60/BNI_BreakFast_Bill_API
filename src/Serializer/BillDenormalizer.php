@@ -80,22 +80,24 @@ class BillDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
                 //Chargement de l'utilisateur courant
                 $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()]);
                 //Chargement du customer
-                $customer = $this->customerRepository->findOneBy(['id' => $data['customer_id'], 'association' => $user->getAssociation()]);
+                $customer = $this->customerRepository->findOneByMemberShipActive($data['customer_id'], $user->getAssociation());
                 //Selection du statut par default de la facture !!!important id = 1!!
                 $billStatutName = $this->billStatutNameRepository->findOneBy(['id' => 1]);
                 //chargement de l'association courrante
                 $asssociation = $user->getAssociation();
 
+                //check customer
                 if($customer === null){
-                    return new JsonResponse(['error' => 'customer inexistant', 'status' => 404], 404);
+                    return new JsonResponse(['message' => 'customer inexistant ou a un membership desactivé', 'code' => 404], 404);
                 }
 
+                //check des dates fournies
                 $billingDate = \explode('-', $data['billing_month']);
                 if((int)$billingDate[0] > 12 || (int)$billingDate[0] < 1 ){
-                    return new JsonResponse(['error' => 'le mois n\'est pas valable (int) de 1 à 12', 'status' => 404], 404);
+                    return new JsonResponse(['message' => 'le mois n\'est pas valable (int) de 1 à 12', 'code' => 404], 404);
                 }
                 if((int)$billingDate[1] < 2000 || (int)$billingDate[1] > date('Y')){
-                    return new JsonResponse(['error' => 'la date doit ce situer après 2000 et ne peut être dans le future', 'status' => 404], 404);
+                    return new JsonResponse(['message' => 'la date doit ce situer après 2000 et ne peut être dans le future', 'code' => 404], 404);
                 }                
 
                 //Selection des session à facturer dans le mois

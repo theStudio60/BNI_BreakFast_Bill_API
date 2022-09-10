@@ -17,6 +17,7 @@ doctrine:
                 alias: App
         dql:
             string_functions:
+                DAY: DoctrineExtensions\Query\Mysql\Day
                 MONTH: DoctrineExtensions\Query\Mysql\Month
                 YEAR: DoctrineExtensions\Query\Mysql\Year       
 

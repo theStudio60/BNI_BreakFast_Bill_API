@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Bill;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Customer;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Bill>
@@ -54,13 +55,14 @@ class BillRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Bill
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function findOneBySameMonth(Customer $customer, string $billingMonth): ?Bill
+   {
+       return $this->createQueryBuilder('b')
+           ->andWhere('b.customer = :customer')
+           ->andWhere('b.billingMonth = :billingMonth')
+           ->setParameters(['customer' => $customer, 'billingMonth' => $billingMonth])
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
 }

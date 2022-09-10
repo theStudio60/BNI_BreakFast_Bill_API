@@ -65,7 +65,7 @@ class SessionTypeDenormalizer implements ContextAwareDenormalizerInterface, Deno
         $sessionPlace = $this->sessionPlace->findOneBy(['id' => $data['sessionPlace_id'], 'association' => $asssociation]);
         //controle que la SessionPlace existe bien
         if($sessionPlace === null){
-            return new JsonResponse(['error' => 'SessionPlace inexistante', 'status' => 404], 404); 
+            return new JsonResponse(['message' => 'SessionPlace inexistante', 'code' => 404], 404); 
         }
         //set des valeurs      
             $sessionType

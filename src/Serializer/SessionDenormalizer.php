@@ -69,7 +69,7 @@ class SessionDenormalizer implements ContextAwareDenormalizerInterface, Denormal
         $customers = $this->customerRepository->findBy(['association' => $asssociation]);
         //controle que la sessionType existe bien
         if($sessionType === null){
-            return new JsonResponse(['error' => 'SessionType inexistante', 'status' => 404], 404); 
+            return new JsonResponse(['message' => 'SessionType inexistante', 'code' => 404], 404); 
         }
         //set des valeurs    
             $session

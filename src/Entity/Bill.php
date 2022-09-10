@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\OInterface\BillInterface;
 use App\Repository\BillRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use App\Controller\BillGeneratorController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,6 +48,37 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
                         ],
                         'example' => [
                             'customer_id' => '1 [ID client]',
+                            'billing_month' => '10-2022 [mois de la facturation - année]',
+                            'itemList' => '[1, 2, 3] [array d\'items]',
+                            'from_at' => '25.08.2022 [date d\'emission de la facture] (dd.mm.yyyy)'
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'bill_generator' => [
+        'method' => 'POST',
+        'path' => '/bill/generator',
+        'controller' => BillGeneratorController::class,
+        'security' => 'is_granted("ROLE_USER")',
+        'security_message' => 'Seul un utilisateur peut générer les factures',
+        'openapi_context' => [
+            'summary'     => 'Genére les factures clients',
+            'description' => "",
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema'  => [
+                            'type'       => 'object',
+                            'properties' =>
+                                [
+                                    'billing_month' => ['type' => 'int'],
+                                    'itemList' => ['type' => 'array'],
+                                    'from_at' => ['type' => 'date']
+                                ],
+                        ],
+                        'example' => [
                             'billing_month' => '10-2022 [mois de la facturation - année]',
                             'itemList' => '[1, 2, 3] [array d\'items]',
                             'from_at' => '25.08.2022 [date d\'emission de la facture] (dd.mm.yyyy)'
@@ -153,6 +185,9 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $billingMonth = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+    private ?string $ReminderAmount = null;
 
     /**
      * Date à laquelle la facture doit être émise (date : jj.mm.yyyy)
@@ -365,6 +400,18 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     public function setBillingMonth(?string $billingMonth): self
     {
         $this->billingMonth = $billingMonth;
+
+        return $this;
+    }
+
+    public function getReminderAmount(): ?string
+    {
+        return $this->ReminderAmount;
+    }
+
+    public function setReminderAmount(?string $ReminderAmount): self
+    {
+        $this->ReminderAmount = $ReminderAmount;
 
         return $this;
     }

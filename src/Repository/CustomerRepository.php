@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Customer;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Association;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Customer>
@@ -39,28 +41,41 @@ class CustomerRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Customer[] Returns an array of Customer objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+/**
+ * Retourne une liste de membres avec un membreship actif
+ *
+ * @param Association $association
+ * @return array
+ */
+    public function findByMemberShipActive(Association $association): array
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.membership', 'm')
+            ->andWhere('c.association = :association')
+            ->andWhere('m.is_active = true')
+            ->setParameter('association', $association)
+            ->getQuery()
+            ->getResult();
+        ;
+    }
 
-//    public function findOneBySomeField($value): ?Customer
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+/**
+ * Retourne un membre avec un membreship actif
+ *
+ * @param [type] $id
+ * @param Association $association
+ * @return Customer|null
+ */
+   public function findOneByMemberShipActive($id, Association $association): ?Customer
+   {
+       return $this->createQueryBuilder('c')
+           ->join('c.membership', 'm')
+           ->andWhere('c.id = :id')
+           ->andWhere('c.association = :association')
+           ->andWhere('m.is_active = true')
+           ->setParameters(['id' =>  $id, 'association' => $association])
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
 }
