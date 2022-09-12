@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\BankInformationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BankInformationRepository;
+use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: BankInformationRepository::class)]
-class BankInformation
+class BankInformation implements ForQueryAssociationOwnerInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -87,7 +88,7 @@ class BankInformation
         return $this->association;
     }
 
-    public function setAssociation(Association $association): self
+    public function setAssociation(?Association $association): self
     {
         $this->association = $association;
 

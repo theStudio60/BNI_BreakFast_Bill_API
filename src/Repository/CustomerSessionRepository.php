@@ -40,7 +40,15 @@ class CustomerSessionRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByMonth(Customer $customer, int $month, $year = null): array
+    /**
+     * Cherche les session utilisateurs dans un mois donné
+     *
+     * @param Customer $customer
+     * @param integer $month
+     * @param integer $year
+     * @return array
+     */
+    public function findByMonth(Customer $customer, int $month, int $year = null): array
     {
         if($year === null){
             $year = date('Y');

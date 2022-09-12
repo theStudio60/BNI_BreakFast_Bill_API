@@ -10,27 +10,29 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 
-class AssociationOwnerDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface{
+class AssociationOwnerDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
+{
 
     use DenormalizerAwareTrait;
 
-	function __construct(private Security $security, private UserRepository $userRepository) {
-	}    
-/**
- * Undocumented function
- *
- * @param mixed $data
- * @param string $type
- * @param string|null $format
- * @param array $context
- * @return boolean
- */
-    public function supportsDenormalization(
-        mixed $data, 
-        string $type, 
-        ?string $format = null, 
-        array $context = []): bool
+    function __construct(private Security $security, private UserRepository $userRepository)
     {
+    }
+    /**
+     * Undocumented function
+     *
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return boolean
+     */
+    public function supportsDenormalization(
+        mixed $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ): bool {
         $reflectionClass = new \ReflectionClass($type);
         $allreadycalled = $context[$this->allReadyCalledKey($type)]  ?? false;
         return $reflectionClass->implementsInterface(AssociationOwnerInterface::class) && $allreadycalled === false;
@@ -46,23 +48,23 @@ class AssociationOwnerDenormalizer implements ContextAwareDenormalizerInterface,
      * @return void
      */
     public function denormalize(
-        mixed $data, 
-        string $type, 
-        ?string $format = null, 
-        array $context = [])
-    {
+        mixed $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ) {
         $context[$this->allReadyCalledKey($type)] = true;
         $association = $this->denormalizer->denormalize($data, $type, $format, $context);
 
         $user = $this->userRepository->findOneBy(['id' => $this->security->getUser()]);
-        $asssociation = $user->getAssociation() ;        
-            $association->setAssociation($asssociation);
+        $asssociation = $user->getAssociation();
+        $association->setAssociation($asssociation);
 
         return $association;
     }
 
-    private function allReadyCalledKey(string $key){
+    private function allReadyCalledKey(string $key)
+    {
         return $key;
     }
-
 }

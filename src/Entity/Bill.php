@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\OInterface\BillInterface;
 use App\Repository\BillRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
-use App\Controller\BillGeneratorController;
+use App\Controller\BillGeneratorAPI;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -60,7 +60,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     'bill_generator' => [
         'method' => 'POST',
         'path' => '/bill/generator',
-        'controller' => BillGeneratorController::class,
+        'controller' => BillGeneratorAPI::class,
         'security' => 'is_granted("ROLE_USER")',
         'security_message' => 'Seul un utilisateur peut générer les factures',
         'openapi_context' => [

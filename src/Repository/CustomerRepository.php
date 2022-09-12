@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Customer;
 use App\Entity\Association;
+use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -45,15 +46,18 @@ class CustomerRepository extends ServiceEntityRepository
  * Retourne une liste de membres avec un membreship actif
  *
  * @param Association $association
+ * @param integer $month
+ * @param integer $year
  * @return array
  */
-    public function findByMemberShipActive(Association $association): array
+    public function findByMemberShipDateActive(Association $association, int $month, int $year): array
     {
-        return $this->createQueryBuilder('c')
+            return $this->createQueryBuilder('c')
             ->join('c.membership', 'm')
+            ->andWhere('YEAR(m.membership_done_at) > :year')
+            ->orWhere('MONTH(m.membership_done_at) >= :month')
             ->andWhere('c.association = :association')
-            ->andWhere('m.is_active = true')
-            ->setParameter('association', $association)
+            ->setParameters(['association' => $association, 'month' => $month, 'year' => $year])
             ->getQuery()
             ->getResult();
         ;

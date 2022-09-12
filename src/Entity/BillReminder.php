@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BillReminderRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\OInterface\AssociationOwnerInterface;
 use App\OInterface\BillReminderInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 

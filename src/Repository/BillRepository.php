@@ -55,6 +55,13 @@ class BillRepository extends ServiceEntityRepository
 //        ;
 //    }
 
+/**
+ * Rechercher une facture en fournissant mois/année
+ *
+ * @param Customer $customer
+ * @param string $billingMonth "08-2022"
+ * @return Bill|null
+ */
    public function findOneBySameMonth(Customer $customer, string $billingMonth): ?Bill
    {
        return $this->createQueryBuilder('b')

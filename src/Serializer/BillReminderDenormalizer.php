@@ -16,12 +16,13 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
-class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface{
+class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
+{
 
     use DenormalizerAwareTrait;
 
-	function __construct(
-        private Security $security, 
+    function __construct(
+        private Security $security,
         private UserRepository $userRepository,
         private BillRepository $billRepository,
         private BillReminderRepository $billReminderRepository,
@@ -29,22 +30,22 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
         private BillStatutNameRepository $billStatutNameRepository,
         private ManagerRegistry $doctrine
     ) {
-	}    
-/**
- * Undocumented function
- *
- * @param mixed $data
- * @param string $type
- * @param string|null $format
- * @param array $context
- * @return boolean
- */
+    }
+    /**
+     * Undocumented function
+     *
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return boolean
+     */
     public function supportsDenormalization(
-        mixed $data, 
-        string $type, 
-        ?string $format = null, 
-        array $context = []): bool
-    {
+        mixed $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ): bool {
         $reflectionClass = new \ReflectionClass($type);
         $allreadycalled = $context[$this->allReadyCalledKey($type)]  ?? false;
         return $reflectionClass->implementsInterface(BillReminderInterface::class) && $allreadycalled === false;
@@ -60,11 +61,11 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
      * @return void
      */
     public function denormalize(
-        mixed $data, 
-        string $type, 
-        ?string $format = null, 
-        array $context = [])
-    {
+        mixed $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ) {
         $context[$this->allReadyCalledKey($type)] = true;
         $billReminder = $this->denormalizer->denormalize($data, $type, $format, $context);
 
@@ -72,58 +73,58 @@ class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, Den
         $bill = $this->billRepository->findOneBy(['id' => $data['bill_id'], 'association' => $user->getAssociation()]);
         $billReminderCondition = $this->billReminderConditionRepository->findOneBy(['id' => $data['billReminderCondition_id'], 'association' => $user->getAssociation()]);
 
-            if($bill === null){
-                $data = ['code' => 500, 'message' => 'Facture introuvable.'];
-                return new JsonResponse($data, 500); 
-            } 
-            if($billReminderCondition === null){
-                $data = ['code' => 500, 'message' => 'Condition de rappel introuvable.'];
-                return new JsonResponse($data, 500); 
-            }     
+        if ($bill === null) {
+            $data = ['code' => 500, 'message' => 'Facture introuvable.'];
+            return new JsonResponse($data, 500);
+        }
+        if ($billReminderCondition === null) {
+            $data = ['code' => 500, 'message' => 'Condition de rappel introuvable.'];
+            return new JsonResponse($data, 500);
+        }
 
         $now = new \DateTimeImmutable();
 
         //controle de la date d'échéance de la facture
-        if($bill->getToAt() > $now){
+        if ($bill->getToAt() > $now) {
             $data = ['code' => 406, 'message' => 'La date d\'échéance n\'est pas encore atteinte.'];
             return new JsonResponse($data, 406);
-        }  
+        }
 
         //controle si un autre rappel est déjà en cours
         $reminders = $this->billReminderRepository->findBy(['bill' => $bill], ['id' => 'DESC']); //important laisser le tri en DESC
-            foreach ($reminders as $key => $value) {
-                //control si le rappel est encore dans les temps de paiement
-                //ajout du temps de paiement pour le rappel
-                $endDateReminder = $value->getReminderAt()->add(new \DateInterval('P'.$value->getBillReminderCondition()->getDayForPaid().'D'));
+        foreach ($reminders as $key => $value) {
+            //control si le rappel est encore dans les temps de paiement
+            //ajout du temps de paiement pour le rappel
+            $endDateReminder = $value->getReminderAt()->add(new \DateInterval('P' . $value->getBillReminderCondition()->getDayForPaid() . 'D'));
 
-                if($endDateReminder > $now){
-                    $data = ['code' => 406, 'message' => 'La date d\'échéance du rappel n\'est pas encore atteinte.'];
-                    return new JsonResponse($data, 406);
-                }   
+            if ($endDateReminder > $now) {
+                $data = ['code' => 406, 'message' => 'La date d\'échéance du rappel n\'est pas encore atteinte.'];
+                return new JsonResponse($data, 406);
+            }
 
-                //si pas de retour alors le rappel est arrivé à expiration, on le créer
-                }      
+            //si pas de retour alors le rappel est arrivé à expiration, on le créer
+        }
 
-            //création du rappel
-            $billReminder
-                ->setBill($bill)
-                ->setBillReminderCondition($billReminderCondition)
-                ->setReminderAt($now)
-                ->setCreatedBy($user);
+        //création du rappel
+        $billReminder
+            ->setBill($bill)
+            ->setBillReminderCondition($billReminderCondition)
+            ->setReminderAt($now)
+            ->setCreatedBy($user);
 
-            $bill
-                ->setReminderNumber($bill->getReminderNumber()+1)
-                ->setReminderAmount($bill->getReminderAmount()+$billReminderCondition->getAddAmount());
-            
-            $bill->getBillStatut()->setBillStatutName(
-                $this->billStatutNameRepository->findOneBy(['id' => 3])
-            );                
+        $bill
+            ->setReminderNumber($bill->getReminderNumber() + 1)
+            ->setReminderAmount($bill->getReminderAmount() + $billReminderCondition->getAddAmount());
+
+        $bill->getBillStatut()->setBillStatutName(
+            $this->billStatutNameRepository->findOneBy(['id' => 3])
+        );
 
         return $billReminder;
     }
 
-    private function allReadyCalledKey(string $key){
+    private function allReadyCalledKey(string $key)
+    {
         return $key;
     }
-
 }
