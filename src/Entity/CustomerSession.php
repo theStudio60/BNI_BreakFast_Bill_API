@@ -15,14 +15,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'security' => 'is_granted("ROLE_USER")',
             'security_message' => 'Seul un utilisateur peut consulter les sessions utilisateur',
             'openapi_context' => [
-                'summary'     => 'Retourne la liste des associations',
+                'summary'     => 'Retourne la liste des sessions utilisateur',
             ]
         ],
         'post' => [
             'security' => 'is_granted("ROLE_USER")',
             'security_message' => 'Seul un utilisateur peut ajouter une session utilisateur',
             'openapi_context' => [
-                'summary'     => 'Créer une nouvelle association',
+                'summary'     => 'Créer une nouvelle sessions utilisateur',
                 'description' => "",
                 'requestBody' => [
                     'content' => [
@@ -50,14 +50,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
             "security" => "is_granted('ROLE_USER')",
             "security_message" => "Seul un utilisateur peut consulter les session utilisateur",
             'openapi_context' => [
-                'summary'     => 'Retourne une association',
+                'summary'     => 'Retourne une sessions utilisateur',
             ]
         ],
         'put' => [
             "security" => "is_granted('ROLE_USER')",
             "security_message" => "Seul un utilisateur peut modifier les sessions utilisateur",
             'openapi_context' => [
-                'summary'     => 'Modifier association',
+                'summary'     => 'Modifier sessions utilisateur',
                 'description' => "",
                 'requestBody' => [
                     'content' => [
