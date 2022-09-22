@@ -153,7 +153,7 @@ class Session implements SessionInterface, ForQueryAssociationOwnerInterface
         return $this->to_done;
     }
 
-    public function setToDone(bool $to_done): self
+    public function setToDone(bool | int $to_done): self
     {
         $this->to_done = $to_done;
 
