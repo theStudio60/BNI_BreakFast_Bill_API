@@ -2,16 +2,17 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\VcardParserAPI;
 use App\OInterface\CustomerInterface;
 use App\Repository\CustomerRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiFilter(SearchFilter::class, properties:['firstname' => 'partial', 'lastname' => 'partial', 'membership.is_active' => 'partial'])]
@@ -67,7 +68,7 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
         ],
     ],
 ],
-itemOperations:[
+itemOperations:[    
     'get' => [
         "security" => "is_granted('ROLE_USER')",
         "security_message" => "Seul un utilisateur peut consulter les membres",
@@ -112,7 +113,7 @@ itemOperations:[
                 ],
             ],
         ],            
-    ]
+    ],  
 ],
 )]    
 

@@ -1,0 +1,9 @@
+BEGIN:VCARD
+VERSION:2.1
+FN;CHARSET=ISO-8859-1:Martin\, Thierry et Brigitte (-Despland)
+N;CHARSET=ISO-8859-1:Martin;Thierry et Brigitte;;;(-Despland)
+ADR;TYPE=HOME;CHARSET=ISO-8859-1:;;Chemin du Collège 58;Cheseaux-Noréaz;;1400;Suisse
+TEL;TYPE=HOME,pref;CHARSET=ISO-8859-1:+41244450189
+NOTE;CHARSET=ISO-8859-1:L'adresse sur la carte de la Suisse\: Cheseaux-Noréaz\,ch.du-Collège-58
+URL:http://tel.search.ch/cheseaux-noreaz/chemin-du-college-58/thierry-et-brigitte-martin
+END:VCARD

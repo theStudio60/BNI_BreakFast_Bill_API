@@ -12,7 +12,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\BillStatutNameRepository;
 use App\Repository\CustomerSessionRepository;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 

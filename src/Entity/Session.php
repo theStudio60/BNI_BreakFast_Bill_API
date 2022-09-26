@@ -105,7 +105,7 @@ class Session implements SessionInterface, ForQueryAssociationOwnerInterface
 
     #[ORM\Column]
     #[Groups(['session:get:read'])]
-    private ?\DateTimeImmutable $day_at = null;
+    private ?\DateTimeImmutable $day_at = null;   
 
     #[ORM\Column]
     #[Groups(['session:get:read'])]
