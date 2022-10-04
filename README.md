@@ -7,9 +7,9 @@ Configurer la base de donnée dans le fichier .env
 
 Une fois les fichiers récuperer et le .env configurer, lancer un serveur local comme Wamp par exemple et suivez les instructions suivante :
 
-  $ composer install
-  $ php bin/console doctrine:database:create
-  $ php bin/console doctrine:migrations:migrate
+code $ composer install
+code $ php bin/console doctrine:database:create
+code $ php bin/console doctrine:migrations:migrate
 
 La base de donnée est maintenant crée et prête à être utilisée.
 
