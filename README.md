@@ -2,12 +2,12 @@
 
 ## Instruction pour mise en service de l'API
 
-Configurer la base de donnée dans le fichier .env
+Une fois les fichiers récuperer configurer la base de donnée dans le fichier .env
 ```
 DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7&charset=utf8mb4"
 ```
 
-Une fois les fichiers récuperer et le .env configurer, lancer un serveur local comme Wamp par exemple et suivez les instructions suivante :
+Lancer ensuite un serveur local comme Wamp par exemple et suivez les instructions suivante :
 
 ```
 $ composer install
