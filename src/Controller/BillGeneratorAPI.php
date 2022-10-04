@@ -2,6 +2,13 @@
 
 namespace App\Controller;
 
+/**
+ * Cette class crée toutes les factures des client actif en fesant appel au BillingGeneratorService
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use App\Repository\CustomerRepository;
 use App\Service\BillingGeneratorService;
 use Symfony\Component\HttpFoundation\Request;

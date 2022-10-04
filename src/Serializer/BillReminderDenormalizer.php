@@ -2,19 +2,27 @@
 
 namespace App\Serializer;
 
+/**
+ * Cette fonction est appelée lorsque l'entité implémente l'intérface BillReminderInterface
+ * @return BillReminder
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use App\Entity\BillReminder;
 use App\Repository\BillRepository;
 use App\Repository\UserRepository;
 use App\OInterface\BillReminderInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\BillReminderRepository;
+use App\Repository\BillStatutNameRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\BillReminderConditionRepository;
-use App\Repository\BillStatutNameRepository;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 class BillReminderDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
 {

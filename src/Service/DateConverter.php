@@ -1,6 +1,14 @@
 <?php 
 
 namespace App\Service;
+
+/**
+ * Cette fonction return les mois de l'année en français
+ * @return string
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
 class DateConverter {
 
 /**

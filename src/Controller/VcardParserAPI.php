@@ -2,6 +2,13 @@
 
 namespace App\Controller;
 
+/**
+ * Cette class parse un fichier Vcard .vcf et renvoie les data dans un tableau JSON
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use Sabre\VObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +29,7 @@ final class VcardParserAPI extends AbstractController
     public function __invoke(Request $request): JsonResponse
     {
         if(!$request->files->get("file")){          
-            $response = new JsonResponse(['message' => 'Erreur, fichier introuvable']);
+            $response = new JsonResponse(['message' => 'Erreur, fichier introuvable'], 500);
         }else{
             //récupération du fichier
             $file = $request->files->get("file");

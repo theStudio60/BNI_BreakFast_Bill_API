@@ -2,6 +2,15 @@
 
 namespace App\Serializer;
 
+/**
+ * Cette fonction est appelée lorsque l'entité implémente l'intérface SessionInterface
+ * @return Session
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
+use App\Entity\Session;
 use App\Entity\CustomerSession;
 use App\Repository\UserRepository;
 use App\OInterface\SessionInterface;

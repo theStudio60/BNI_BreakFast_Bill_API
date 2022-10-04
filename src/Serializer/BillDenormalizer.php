@@ -2,6 +2,15 @@
 
 namespace App\Serializer;
 
+/**
+ * Cette fonction est appelée lorsque l'entité implémente l'intérface BillInterface
+ * @return Bill
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
+
 use App\Entity\BillStatut;
 use App\OInterface\BillInterface;
 use App\Repository\BillRepository;

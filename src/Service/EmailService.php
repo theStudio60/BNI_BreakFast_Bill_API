@@ -2,6 +2,13 @@
 
 namespace App\Service;
 
+/**
+ * Crée si ce n'est pas fait et envoie la facture par email au client
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use App\Entity\Bill;
 use App\Service\DateConverter;
 use App\Service\BillingService;

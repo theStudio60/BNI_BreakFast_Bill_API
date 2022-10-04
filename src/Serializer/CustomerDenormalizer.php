@@ -2,8 +2,17 @@
 
 namespace App\Serializer;
 
-use App\Entity\CustomerSession;
+/**
+ * Cette fonction est appelée lorsque l'entité implémente l'intérface CustomerInterface
+ * @return Customer
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
+use App\Entity\Customer;
 use App\Entity\Membership;
+use App\Entity\CustomerSession;
 use App\Repository\UserRepository;
 use App\OInterface\CustomerInterface;
 use App\Repository\SessionRepository;

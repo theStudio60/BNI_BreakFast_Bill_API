@@ -2,6 +2,13 @@
 
 namespace App\Service;
 
+/**
+ * Cette class crée une facture en PDF et l'enregistre dans le dossier client "PDF/bill/nomclient/nomFacture.pdf"
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use Fpdf\Fpdf;
 use App\Entity\Bill;
 use App\Service\DateConverter;
@@ -21,7 +28,6 @@ use Sprain\SwissQrBill\DataGroup\Element\PaymentAmountInformation;
 
 class BillingPDFService
 {
-
     public function __construct(
         public CustomerSessionRepository $customerSessionRepository,
         public DateConverter $dateConverter

@@ -2,6 +2,13 @@
 
 namespace App\Serializer;
 
+/**
+ * Cette fonction est étendue par BillInterface
+ * set user dans Bill (setCreatedBy)
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
 
 use App\OInterface\UserOwnerInterface;
 use Symfony\Component\Security\Core\Security;

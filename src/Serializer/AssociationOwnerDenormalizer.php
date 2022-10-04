@@ -2,9 +2,18 @@
 
 namespace App\Serializer;
 
+/**
+ * Cette fonction est appelée lorsque l'entité implémente l'intérface AssociationOwnerInterface
+ * @return Association liée au User
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
+use App\Entity\Association;
 use App\Repository\UserRepository;
-use Symfony\Component\Security\Core\Security;
 use App\OInterface\AssociationOwnerInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;

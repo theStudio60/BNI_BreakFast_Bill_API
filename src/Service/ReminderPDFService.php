@@ -2,6 +2,13 @@
 
 namespace App\Service;
 
+/**
+ * Cette fonction crée un rappel en PDF et l'enregistre dans le dossier client "/bills/nomclient/nomFacture.pdf"
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use Fpdf\Fpdf;
 use App\Entity\Bill;
 use App\Entity\BillReminder;

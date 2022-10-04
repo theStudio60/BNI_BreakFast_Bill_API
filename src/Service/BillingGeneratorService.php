@@ -2,6 +2,13 @@
 
 namespace App\Service;
 
+/**
+ * Cette class crée la facture client depuis "App\Controller\BillGeneratorAPI"
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use App\Entity\Bill;
 use App\Entity\BillStatut;
 use App\Repository\BillRepository;
@@ -12,8 +19,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\BillStatutNameRepository;
 use App\Repository\CustomerSessionRepository;
 use Symfony\Component\Security\Core\Security;
-
-
 
 class BillingGeneratorService
 {

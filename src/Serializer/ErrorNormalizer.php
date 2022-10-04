@@ -1,6 +1,14 @@
 <?php
 namespace App\Serializer;
 
+/**
+ * Cette fonction est appelée lorsque une erreur intervient
+ * @return FlattenException
+ *
+ * @author Julien Ochsenbein (julien.ochsenbein@gmail.com)
+ * @todo Pour Studio60
+ */
+
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
