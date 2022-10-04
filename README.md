@@ -18,8 +18,11 @@ $ php bin/console doctrine:database:create
 ```
 $ php bin/console doctrine:migrations:migrate
 ```
+```
+$ php bin/console lexik:jwt:generate-keypair
+```
 
-La base de donnée est maintenant crée et prête à être utilisée.
+Les clef JWT sont generées et la base de donnée est maintenant crée et prête à être utilisée.
 
 Il faudra crée un premier utilisateur en bas de donnée et pour cela il faut generer un mot de passe crypter, utilisez la commande suivante pour crée le mot de passe, suivez les inscruction et copier le mot de passe crypter pour la suite.
 ```
@@ -29,7 +32,8 @@ $ php bin/console security/hash-password
 Accedez maintenant à votre base de donnée par exemple via votre explorateur. Pour ma part avec Wamp "http://localhost/phpmyadmin"
 Selectionner votre base de donnée et commencer par **créer une première "association" et enregistrer la.**
 
-Faite ensuite de même avec un "user", dans le password copier le mot de passe créer juste avant et **enregistrer votre user.**
+Créer ensuite un **user**, dans **roles** renseigner `["ROLE_USER"]` et dans **password** copier le mot de passe créer juste avant.
+
 
 Vous pouvez maintenant lancer un serveur local comme cela (pour utiliser le front en local, il est important de lancer le serveur à l'adresse localhost:3000) :
 ```
