@@ -26,7 +26,7 @@ Les clef JWT sont generées et la base de donnée est maintenant crée et prête
 
 Il faudra crée un premier utilisateur en bas de donnée et pour cela il faut generer un mot de passe crypter, utilisez la commande suivante pour crée le mot de passe, suivez les inscruction et copier le mot de passe crypter pour la suite.
 ```
-$ php bin/console security/hash-password
+$ php bin/console security:hash-password
  ```
 
 Accedez maintenant à votre base de donnée par exemple via votre explorateur. Pour ma part avec Wamp "http://localhost/phpmyadmin"
