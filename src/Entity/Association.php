@@ -110,31 +110,31 @@ class Association
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?string $street = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?string $street_number = null;
 
     #[ORM\Column]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?int $zip_code = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
-    #[Groups(["get:read"])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?bool $is_active = null;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Bill::class)]
@@ -165,6 +165,7 @@ class Association
     private ?BankInformation $bankInformation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["get:read", "user:get:read"])]
     private ?string $logoImg = null;
 
     public function __construct()

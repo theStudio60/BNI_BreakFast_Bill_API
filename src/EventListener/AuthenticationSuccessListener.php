@@ -22,8 +22,9 @@ class AuthenticationSuccessListener{
         }
 
     //ajout de data dans le token (non cryptée)
-        // $data['data'] = array(
-        // );
+        $data['data'] = array(
+            "userid" => $user->getId()
+        );
 
         //on inject les data si il y en a
         $data?$event->setData($data):null;
