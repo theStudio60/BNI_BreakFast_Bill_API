@@ -72,13 +72,13 @@ class ReminderPDFService
         $pdf->AddPage();
 
         // nom du fichier final
-        $nom_file = $this->getReminderNumber($bill) . ".pdf";
+        $nom_file = $billReminder->getReminderNumber() . ".pdf";
 
         // logo : 65 de largeur et 30 de hauteur
         $pdf->Image('./img/logos/' . $bill->getAssociation()->getLogoImg(), 10, 10, 65, 30);
 
         //Numéro de facture
-        $num_fact = utf8_decode($this->getReminderNumber($bill));
+        $num_fact = utf8_decode($billReminder->getReminderNumber());
         $pdf->SetLineWidth(0.1);
         $pdf->SetFillColor(192);
         $pdf->Rect(120, 15, 85, 8, "DF");
@@ -251,7 +251,7 @@ class ReminderPDFService
         ), 0, 0, 'C');
 
         //Création du buletin QR
-        $output = new FpdfOutput($this->getQrImage($bill, $total), 'en', $pdf);
+        $output = new FpdfOutput($this->getQrImage($bill, $billReminder, $total), 'en', $pdf);
         $output
             ->setPrintable(false)
             ->getPaymentPart();
@@ -268,7 +268,7 @@ class ReminderPDFService
 
 
 
-    public function getQrImage(Bill $bill, $total)
+    public function getQrImage(Bill $bill, BillReminder $billReminder, $total)
     {
         $customer = $bill->getCustomer();
         $association = $bill->getAssociation();
@@ -337,24 +337,11 @@ class ReminderPDFService
         // Optionally, add some human-readable information about what the bill is for.
         $qrBill->setAdditionalInformation(
             AdditionalInformation::create(
-                $this->getReminderNumber($bill)
+                $billReminder->getReminderNumber()
             )
         );
 
         return $qrBill;
-    }
-
-
-    /**
-     * Retourne un numero de facture
-     *
-     * @param Bill $bill
-     * @return string
-     */
-    public function getReminderNumber(Bill $bill): string
-    {
-        $customerNumber = substr(str_repeat(0, 5) . $bill->getCustomer()->getId(), -5);
-        return 'R-M' . $customerNumber . 'Q' . $bill->getBillingMonth();
     }
 
 

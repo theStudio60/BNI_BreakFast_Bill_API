@@ -70,6 +70,8 @@ class BillReminder implements BillReminderInterface
     #[ORM\ManyToOne]
     private ?User $createdBy = null;
 
+    private ?String $reminderNumber = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -122,4 +124,11 @@ class BillReminder implements BillReminderInterface
 
         return $this;
     }
+
+    public function getReminderNumber(): string
+    {
+        $customerNumber = substr(str_repeat(0, 5) . $this->id, -5);
+        return 'R-M' . $customerNumber . 'Q' . $this->bill->getBillingMonth();
+    }
+
 }

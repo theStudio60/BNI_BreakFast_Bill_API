@@ -15,7 +15,11 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[ApiFilter(SearchFilter::class, properties:['firstname' => 'partial', 'lastname' => 'partial', 'membership.is_active' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties:[
+    'firstname' => 'partial',
+    'lastname' => 'partial',
+    'membership.is_active' => 'partial',
+    'bills.billStatut.bill_statut_name.name' => 'partial'])]
 #[ApiResource(
     normalizationContext:['groups' => ['customer:get:read']],
     attributes: ["pagination_items_per_page" => 10, "pagination_maximum_items_per_page" => 30],
@@ -126,35 +130,36 @@ class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
+    
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?string $street = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?string $street_number = null;
 
     #[ORM\Column]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?int $zip_code = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read','bill:get:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?string $company = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?string $email = null;
 
     #[ORM\ManyToOne]

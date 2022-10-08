@@ -47,7 +47,7 @@ class BillingPDFService
         $pdf = new Fpdf('P', 'mm', 'A4');
                 
         // nom du fichier final
-        $nom_file = $this->getBillNumber($bill) . ".pdf";
+        $nom_file = $bill->getBillNumber() . ".pdf";
 
         //si le dossier client n'existe pas encore on le créer
         $customerFolder = $bill->getCustomer()->getId() . $bill->getCustomer()->getCompany();
@@ -72,7 +72,7 @@ class BillingPDFService
         $pdf->Image('./img/logos/' . $bill->getAssociation()->getLogoImg(), 10, 10, 65, 30);
 
         //Numéro de facture
-        $num_fact = utf8_decode($this->getBillNumber($bill));
+        $num_fact = utf8_decode($bill->getBillNumber());
         $pdf->SetLineWidth(0.1);
         $pdf->SetFillColor(192);
         $pdf->Rect(120, 15, 85, 8, "DF");
@@ -296,24 +296,11 @@ class BillingPDFService
         // Optionally, add some human-readable information about what the bill is for.
         $qrBill->setAdditionalInformation(
             AdditionalInformation::create(
-                $this->getBillNumber($bill)
+                $bill->getBillNumber()
             )
         );
 
         return $qrBill;
-    }
-
-
-    /**
-     * Retourne un numero de facture
-     *
-     * @param Bill $bill
-     * @return string
-     */
-    public function getBillNumber(Bill $bill): string
-    {
-        $customerNumber = substr(str_repeat(0, 5) . $bill->getCustomer()->getId(), -5);
-        return 'F-M' . $customerNumber . 'Q' . $bill->getBillingMonth();
     }
 
 /**

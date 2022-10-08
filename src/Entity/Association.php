@@ -162,6 +162,7 @@ class Association
     private Collection $sessions;
 
     #[ORM\OneToOne(mappedBy: 'association', cascade: ['persist', 'remove'])]
+    #[Groups(["get:read", "user:get:read"])]
     private ?BankInformation $bankInformation = null;
 
     #[ORM\Column(length: 255, nullable: true)]

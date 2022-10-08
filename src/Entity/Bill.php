@@ -133,6 +133,7 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['bill:get:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bills')]
@@ -181,6 +182,7 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     private Collection $items;
 
     #[ORM\ManyToOne(inversedBy: 'bills')]
+    #[Groups(['bill:get:read'])]
     private ?Customer $customer = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -188,6 +190,9 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
     private ?string $ReminderAmount = null;
+
+    #[Groups(['bill:get:read'])]
+    private ?string $billNumber = null;
 
     /**
      * Date à laquelle la facture doit être émise (date : jj.mm.yyyy)
@@ -415,4 +420,10 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
 
         return $this;
     }
+
+    public function getBillNumber(): string
+    {
+        $customerNumber = substr(str_repeat(0, 5) . $this->id, -5);
+        return 'F-M' . $customerNumber . 'Q' . $this->billingMonth;
+    }    
 }

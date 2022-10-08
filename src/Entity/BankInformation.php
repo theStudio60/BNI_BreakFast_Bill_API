@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BankInformationRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
 
 #[ORM\Entity(repositoryClass: BankInformationRepository::class)]
@@ -24,6 +25,7 @@ class BankInformation implements ForQueryAssociationOwnerInterface
     private ?string $bankName = null;
 
     #[ORM\Column(length: 3)]
+    #[Groups(["get:read", "user:get:read"])]
     private ?string $currency = null;
 
     #[ORM\OneToOne(inversedBy: 'bankInformation', cascade: ['persist', 'remove'])]
