@@ -16,7 +16,7 @@ use App\OInterface\ForQueryAssociationOwnerInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
-#[ApiFilter(SearchFilter::class, properties:['is_archived' => 'exact', 'billStatut.bill_statut_name.id' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties:['is_archived' => 'exact', 'billStatut.bill_statut_name.id' => 'exact', 'customer.id' => 'exact'])]
 #[ApiResource( 
     normalizationContext:['groups' => ['bill:get:read']],
     collectionOperations:[
@@ -59,7 +59,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     ],
     'bill_generator' => [
         'method' => 'POST',
-        'path' => '/bill/generator',
+        'path' => '/bills/generator',
         'controller' => BillGeneratorAPI::class,
         'security' => 'is_granted("ROLE_USER")',
         'security_message' => 'Seul un utilisateur peut générer les factures',
