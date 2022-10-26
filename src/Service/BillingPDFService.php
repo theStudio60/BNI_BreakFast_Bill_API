@@ -14,7 +14,6 @@ use App\Entity\Bill;
 use App\Service\DateConverter;
 use Sprain\SwissQrBill\QrBill;
 use App\Repository\CustomerSessionRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sprain\SwissQrBill\DataGroup\Element\CombinedAddress;
 use Sprain\SwissQrBill\DataGroup\Element\PaymentReference;
@@ -23,7 +22,6 @@ use Sprain\SwissQrBill\DataGroup\Element\CreditorInformation;
 use Sprain\SwissQrBill\Reference\QrPaymentReferenceGenerator;
 use Sprain\SwissQrBill\DataGroup\Element\AdditionalInformation;
 use Sprain\SwissQrBill\PaymentPart\Output\FpdfOutput\FpdfOutput;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sprain\SwissQrBill\DataGroup\Element\PaymentAmountInformation;
 
 class BillingPDFService
@@ -31,8 +29,7 @@ class BillingPDFService
     public function __construct(
         public CustomerSessionRepository $customerSessionRepository,
         public DateConverter $dateConverter
-    ) {
-    }
+    ) { }
 
 
     /**

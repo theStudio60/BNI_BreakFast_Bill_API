@@ -3,11 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CustomerSessionRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: CustomerSessionRepository::class)]
+#[ApiFilter(SearchFilter::class, properties:['customer.id' => 'exact'])]
+#[ApiFilter(DateFilter::class, properties: ['session.day_at'])]
 #[ApiResource(
     normalizationContext:['groups' => ['customerSessionget:read']],
     collectionOperations:[
@@ -103,6 +108,7 @@ class CustomerSession
 
     #[ORM\ManyToOne(inversedBy: 'customerSessions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['customerSessionget:read'])]
     private ?Customer $customer = null;
 
     #[ORM\Column]

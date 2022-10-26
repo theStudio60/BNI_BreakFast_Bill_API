@@ -13,13 +13,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\OInterface\ForQueryAssociationOwnerInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiFilter(SearchFilter::class, properties:[
     'firstname' => 'partial',
     'lastname' => 'partial',
-    'membership.is_active' => 'partial',
     'bills.billStatut.bill_statut_name.name' => 'partial'])]
+#[ApiFilter(BooleanFilter::class, properties: ['membership.is_active'])]
 #[ApiResource(
     normalizationContext:['groups' => ['customer:get:read']],
     attributes: ["pagination_items_per_page" => 10, "pagination_maximum_items_per_page" => 30],
@@ -126,7 +127,7 @@ class Customer implements CustomerInterface, ForQueryAssociationOwnerInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['customer:get:read'])]
+    #[Groups(['customer:get:read', 'bill:get:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

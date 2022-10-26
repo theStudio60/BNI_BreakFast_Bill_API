@@ -14,7 +14,6 @@ use App\Entity\BillStatut;
 use App\Repository\BillRepository;
 use App\Repository\ItemRepository;
 use App\Repository\CustomerRepository;
-use App\Repository\BillStatutRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\BillStatutNameRepository;
 use App\Repository\CustomerSessionRepository;

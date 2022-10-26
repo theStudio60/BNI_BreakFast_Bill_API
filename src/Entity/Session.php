@@ -100,11 +100,11 @@ class Session implements SessionInterface, ForQueryAssociationOwnerInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['session:get:read'])]
+    #[Groups(['session:get:read', 'customerSessionget:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['session:get:read'])]
+    #[Groups(['session:get:read', 'customerSessionget:read'])]
     private ?\DateTimeImmutable $day_at = null;   
 
     #[ORM\Column]
@@ -117,7 +117,7 @@ class Session implements SessionInterface, ForQueryAssociationOwnerInterface
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['session:get:read'])]
+    #[Groups(['session:get:read', 'customerSessionget:read'])]
     private ?SessionType $session_type = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]

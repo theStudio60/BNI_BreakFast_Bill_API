@@ -95,19 +95,19 @@ class SessionType implements SessionTypeInterface, ForQueryAssociationOwnerInter
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['sessionType:get:read'])]
+    #[Groups(['sessionType:get:read', 'customerSessionget:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['sessionType:get:read', 'session:get:read'])]
+    #[Groups(['sessionType:get:read', 'session:get:read', 'customerSessionget:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['sessionType:get:read'])]
+    #[Groups(['sessionType:get:read', 'customerSessionget:read'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
-    #[Groups(['sessionType:get:read', 'session:get:read'])]
+    #[Groups(['sessionType:get:read', 'session:get:read', 'customerSessionget:read'])]
     private ?string $price_of = null;
 
     #[ORM\ManyToOne]

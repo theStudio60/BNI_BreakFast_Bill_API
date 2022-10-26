@@ -11,11 +11,9 @@ namespace App\Service;
 
 use App\Entity\Bill;
 use App\Service\DateConverter;
-use App\Service\BillingService;
 use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 

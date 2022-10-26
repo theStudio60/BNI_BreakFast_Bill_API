@@ -186,6 +186,7 @@ class Bill implements BillInterface, ForQueryAssociationOwnerInterface
     private ?Customer $customer = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['bill:get:read'])]
     private ?string $billingMonth = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
