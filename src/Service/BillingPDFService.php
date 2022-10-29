@@ -52,7 +52,8 @@ class BillingPDFService
 
         //on controlle que la facture n'aille pas déjà été generée
         if (file_exists($this->getBillFolder() . $customerFolder . '/' . $nom_file)) {
-            return new JsonResponse(['message' => "La facture à déjà été créer", 'code' => 500], 500);
+            // return new JsonResponse(['message' => "La facture à déjà été créer", 'code' => 500], 500);
+            return false;
         }
 
         //date de la facture
