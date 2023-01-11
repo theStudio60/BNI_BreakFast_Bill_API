@@ -1,0 +1,71 @@
+//Bootstrap
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+
+@import "variables.scss";
+@import "./layouts/app_container.scss";
+@import "./layouts/header.scss";
+@import "./layouts/left_menu.scss";
+@import "./layouts/customer_details.scss";
+@import "./layouts/columns.scss";
+@import "./layouts/form.scss";
+
+.app_table{
+    @extend
+    .table;
+    &__tr{
+        color:$black;
+
+        &--red{
+            color:$red;
+        }
+        &--green{
+            color:$limegreen;
+        }
+    }
+}
+
+.app_badge{
+    margin: 0 0 10px 0;
+    &--success{
+        @extend
+        .badge,
+        .text-bg-success;
+    }
+    &--info{
+        @extend
+        .badge,
+        .text-bg-info;
+    }
+    &--danger{
+        @extend
+        .badge,
+        .text-bg-danger;
+    }        
+}
+
+.pagination{
+    @extend
+    .pagination,
+    .justify-content-center;
+    >li{
+        @extend
+        .page-item;
+        >button{
+            @extend
+            .page-link;
+            &.active{
+                @extend
+                .active
+            }
+        }
+    }
+}
+
+.img--rounded{
+    @extend
+    .justify-content-center;
+    border-radius: 50%;
+    height:80px;
+    width: 80px;
+}
