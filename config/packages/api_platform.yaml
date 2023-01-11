@@ -1,0 +1,35 @@
+api_platform:
+    title: 'BNI API'
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header        
+    show_webby: false
+
+    defaults:
+        pagination_client_items_per_page: true
+    collection:
+        pagination:
+            items_per_page_parameter_name: itemsPerPage # Default value
+            maximum_items_per_page: 30
+            items_per_page: 15
+            
+    formats:
+        jsonld:
+            mime_types:
+                - application/ld+json
+        json:
+            mime_types:
+                - application/json
+        html:
+            mime_types:
+                - text/html
+        file:
+            mime_types:
+                - multipart/form-data               

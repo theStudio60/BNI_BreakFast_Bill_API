@@ -1,0 +1,57 @@
+.form{
+    height: 100%;
+    margin:10px;
+    padding-bottom: 15px;
+        &--lg_8{
+            @extend
+            .col-lg-8;
+        }      
+    &__row{
+        @extend
+        .row,
+        .justify-content-md-center,
+        .border;
+    }
+    &__column{
+        @extend
+        .col;
+        padding: 5px;
+        &--lg-2{
+            @extend
+            .col-lg-2;
+        }
+        &--lg-4{
+            @extend
+            .col-lg-4;
+        }
+        &--lg-6{
+            @extend
+            .col-lg-6;
+        }     
+        &--lg-8{
+            @extend
+            .col-lg-8;
+        }      
+        &--lg-10{
+            @extend
+            .col-lg-10;
+        }    
+        &--lg-12{
+            @extend
+            .col-lg-12;
+        }                                
+    }
+}
+
+.button{
+    @extend
+    .btn,
+    .btn-outline-primary,
+    .col-lg-2;
+    margin: 15px 5px 15px 5px;
+    &--red{
+    @extend
+    .btn-outline-danger
+}
+}
+

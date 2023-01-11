@@ -1,0 +1,27 @@
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    # token_ttl: 3600 # Validité en seconde du token 3600= 1h //604800 = 1 semaine
+    token_extractors:
+        # look for a token as Authorization Header
+        authorization_header:
+            enabled: true
+            prefix:  Bearer
+            name:    Authorization
+        # check token in a cookie
+        cookie:
+            enabled: true
+            name:    BEARER
+        # check token in query string parameter
+        query_parameter:
+            enabled: true
+            name:    jwt
+        # check token in a cookie
+        split_cookie:
+            enabled: false
+            cookies:
+                - jwt_hp
+                - jwt_s
+    # remove the token from the response body when using cookies
+    remove_token_from_body_when_cookies_used: true
