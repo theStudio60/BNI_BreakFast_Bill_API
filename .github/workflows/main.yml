@@ -4,6 +4,9 @@ on:
     branches:
       - master
 
+  push:
+    branches: [pedro]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
