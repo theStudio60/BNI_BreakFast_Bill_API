@@ -1,0 +1,40 @@
+name: Deploy to infomaniak
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy on pull Master
+
+    env:
+      SSHPASS: Arches2015$
+
+    steps:
+      - uses: actions/checkout@master
+
+      - run: rm -rf .github
+      - run: rm -rf .git
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: gz2jc.ftp.infomaniak.com
+          username: gz2jc_docbni
+          password: Arches2015$
+          port: 22
+          source: "./"
+          target: "/home/clients/a683ce3e7f173dc4178c580ea6b4e7c3/sites/BNIDOC.studio60.ch/Pedro"
+
+      - name: APT UPDATE and INSTALL SSHPASS
+        run: sudo apt update && sudo apt install sshpass
+
+      - name: Composer & DB MIGRATE
+        run:
+          sshpass -e ssh -o stricthostkeychecking=no gz2jc_docbni@gz2jc.ftp.infomaniak.com
+          "cd /home/clients/a683ce3e7f173dc4178c580ea6b4e7c3/sites/BNIDOC.studio60.ch/Pedro &&
+          composer config --no-plugins allow-plugins.symfony/flex true &&
+          composer install --ignore-platform-reqs --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts &&
+          php bin/console doctrine:migrations:migrate"
