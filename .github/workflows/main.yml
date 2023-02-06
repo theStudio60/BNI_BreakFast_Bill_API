@@ -10,7 +10,7 @@ jobs:
     name: Deploy on pull Master
 
     env:
-      SSHPASS: Arches2015$
+      SSHPASS: 
 
     steps:
       - uses: actions/checkout@master
@@ -23,7 +23,7 @@ jobs:
         with:
           host: gz2jc.ftp.infomaniak.com
           username: gz2jc_docbni
-          password: Arches2015$
+          password: 
           port: 22
           source: "./"
           target: "/home/clients/a683ce3e7f173dc4178c580ea6b4e7c3/sites/BNIDOC.studio60.ch/Pedro"
