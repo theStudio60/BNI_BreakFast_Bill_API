@@ -11,14 +11,32 @@ export default function Home() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
+  // TODO A SUPPRIMER APRES AVOIR CHANGER LE PRIVATE ROUTE
   //création de notre requete API avec useEffect
   useEffect(() => {
-    if (user.length === 0) {
-      dispatch(FetchUser());
-    }
+    dispatch(FetchUser());
   }, []);
 
-  console.log("USER", user);
+  //TODO AJOUTER SUR REDUX
+  //fonction de chargement de l'utilisateur
+  const FetchUser = () => {
+    const cookie = JSON.parse(Cookies.get("APICOOKIE"));
+    return async (dispatch) => {
+      await apiBni
+        .get("/users/" + cookie.data.userid)
+        .then((response) => {
+          if (response.status === 200) {
+            dispatch(setUser(response));
+          }
+        })
+        //si item pas valide on update le state pour mettre un message d'erreur
+        .catch((err) => {
+          dispatch(
+            setAlert({ color: "danger", message: "Une erreur est survenue !" })
+          );
+        });
+    };
+  };
 
   //si l'utilisateur n'est pas encore charger on affiche le loading
   if (user.data) {
@@ -46,23 +64,3 @@ export default function Home() {
     return <Loading />;
   }
 }
-
-//fonction de chargement de l'utilisateur
-const FetchUser = () => {
-  const cookie = JSON.parse(Cookies.get("APICOOKIE"));
-  return async (dispatch) => {
-    await apiBni
-      .get("/users/" + cookie.data.userid)
-      .then((response) => {
-        if (response.status === 200) {
-          dispatch(setUser(response));
-        }
-      })
-      //si item pas valide on update le state pour mettre un message d'erreur
-      .catch((err) => {
-        dispatch(
-          setAlert({ color: "danger", message: "Une erreur est survenue !" })
-        );
-      });
-  };
-};

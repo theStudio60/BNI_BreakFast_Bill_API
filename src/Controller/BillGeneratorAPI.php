@@ -34,7 +34,7 @@ class BillGeneratorAPI extends AbstractController
     {
         //on récupère les paramètres
         $parameters = json_decode($request->getContent(), true);
-        
+
         //check des dates fournies
         $billingDate = \explode('-', $parameters['billing_month']);
         if ((int)$billingDate[0] > 12 || (int)$billingDate[0] < 1) {

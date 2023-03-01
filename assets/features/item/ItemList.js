@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import apiBni from "../../conf/axios/api.bni";
@@ -18,13 +18,14 @@ export const fetchItems = () => {
       })
       //si item pas valide on update le state pour mettre un message d'erreur
       .catch((err) => {
-        dispatch(setAlert({ "color":"danger", "message":"Une erreur est survenue !"}));
+        dispatch(
+          setAlert({ color: "danger", message: "Une erreur est survenue !" })
+        );
       });
   };
 };
 
 export default function ItemList() {
-
   const items = useSelector((state) => state.items.data);
   const dispatch = useDispatch();
 
@@ -33,17 +34,17 @@ export default function ItemList() {
     dispatch(fetchItems());
   }, []);
 
-  if(items){
+  if (items) {
     return (
       <>
         {items["hydra:member"].map((item, index) => (
           <NavLink to={"/item/" + item.id} className="nav-link" key={item.id}>
-            { item.id+" - "+item.name }
+            {item.id + " - " + item.name}
           </NavLink>
         ))}
       </>
     );
-  }else{
-    return <Loading />
+  } else {
+    return <Loading />;
   }
 }

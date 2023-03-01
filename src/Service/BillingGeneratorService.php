@@ -13,6 +13,7 @@ use App\Entity\Bill;
 use App\Entity\BillStatut;
 use App\Repository\BillRepository;
 use App\Repository\ItemRepository;
+use App\Service\BillingPDFService;
 use App\Repository\CustomerRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\BillStatutNameRepository;
@@ -29,7 +30,8 @@ class BillingGeneratorService
         public CustomerSessionRepository $customerSessionRepository,
         public ItemRepository $itemRepository,
         public ManagerRegistry $doctrine,
-        public BillRepository $billRepository
+        public BillRepository $billRepository,
+        public BillingPDFService $billingPDFService
     ) {
     }
 
@@ -52,6 +54,7 @@ class BillingGeneratorService
         $billStatutName = $this->billStatutNameRepository->findOneBy(['id' => 1]);
         //chargement de l'association courrante
         $asssociation = $user->getAssociation();
+
 
         //check customer
         if ($customer === null) {
@@ -78,6 +81,7 @@ class BillingGeneratorService
         //Selection des session à facturer dans le mois
         $total = null;
         $customerSessions = $this->customerSessionRepository->findByMonth($customer, (int)$billingDate[0], (int)$billingDate[1]);
+
         foreach ($customerSessions as $key => $value) {
             $total += $value->getSession()->getSessionType()->getPriceOf();
         }
@@ -100,16 +104,23 @@ class BillingGeneratorService
         foreach ($data['itemList'] as $key => $value) {
             //control que les items ajouté soient bien en relation avec l'association
             $item = $this->itemRepository->findOneBy(['id' => $value, 'association' => $user->getAssociation()]);
+
+
+
             if ($item != null) {
                 $bill->addItem($item);
                 $total += $item->getPriceOf();
             }
         }
         $bill->setAmount($total);
+
         $entityManager = $this->doctrine->getManager();
         $entityManager->persist($bill);
         $entityManager->persist($billStatut);
+        $this->billingPDFService->getPDFBill($bill);
         $entityManager->flush();
+
+
 
         return true;
     }

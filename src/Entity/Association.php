@@ -11,8 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
-    normalizationContext:['groups' => ['get:read']],
-    collectionOperations:[
+    normalizationContext: ['groups' => ['get:read']],
+    collectionOperations: [
         'get' => [
             'security' => 'is_granted("ROLE_ADMIN")',
             'security_message' => 'Seul un administrateur peut consulter les associations',
@@ -32,14 +32,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
                             'schema'  => [
                                 'type'       => 'object',
                                 'properties' =>
-                                    [
-                                        'name' => ['type' => 'string'],
-                                        'street' => ['type' => 'string'],
-                                        'streetNumber' => ['type' => 'string'],
-                                        'zipCode' => ['type' => 'int'],
-                                        'city' => ['type' => 'string'],
-                                        'email' => ['type' => 'string'],
-                                    ],
+                                [
+                                    'name' => ['type' => 'string'],
+                                    'street' => ['type' => 'string'],
+                                    'streetNumber' => ['type' => 'string'],
+                                    'zipCode' => ['type' => 'int'],
+                                    'city' => ['type' => 'string'],
+                                    'email' => ['type' => 'string'],
+                                ],
                             ],
                             'example' => [
                                 'name' => 'Green Peace',
@@ -55,7 +55,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
         ],
     ],
-    itemOperations:[
+    itemOperations: [
         'get' => [
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Seul un administrateur peut consulter les associations",
@@ -75,13 +75,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
                             'schema'  => [
                                 'type'       => 'object',
                                 'properties' =>
-                                    [
-                                        'street' => ['type' => 'string'],
-                                        'streetNumber' => ['type' => 'string'],
-                                        'zipCode' => ['type' => 'int'],
-                                        'city' => ['type' => 'string'],
-                                        'email' => ['type' => 'string'],
-                                    ],
+                                [
+                                    'street' => ['type' => 'string'],
+                                    'streetNumber' => ['type' => 'string'],
+                                    'zipCode' => ['type' => 'int'],
+                                    'city' => ['type' => 'string'],
+                                    'email' => ['type' => 'string'],
+                                ],
                             ],
                             'example' => [
                                 'street' => 'Rue de la Madelaine',
@@ -93,7 +93,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                         ],
                     ],
                 ],
-            ],            
+            ],
         ]
     ],
 )]

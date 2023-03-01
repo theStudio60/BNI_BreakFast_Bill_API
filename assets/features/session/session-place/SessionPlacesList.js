@@ -1,11 +1,12 @@
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import apiBni from "../../../conf/axios/api.bni";
 import { setAlert, setSessionPlaces } from "../../../redux";
 import { Loading } from "../../../components/utils";
 
+// TODO MOVE TO REDUX
 //création de la requete
 const fetchSessionPlaces = () => {
   return async (dispatch) => {

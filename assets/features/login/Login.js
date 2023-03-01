@@ -7,8 +7,6 @@ import { useDispatch } from "react-redux";
 import { setAlert } from "../../redux";
 import { FaUser, FaLock } from "react-icons/fa";
 
-const REACT_APP_SERVER_NAME = "http://gz2jcawnza.preview.infomaniak.website";
-
 export default function Login(props) {
   const [loaded, setLoaded] = useState(false);
   let dispatch = useDispatch();
@@ -19,7 +17,7 @@ export default function Login(props) {
     setLoaded(true);
     //creation de la requete
     axios
-      .post(REACT_APP_SERVER_NAME + "/api/login", values, {
+      .post(process.env.REACT_APP_SERVER_NAME + "/api/login", values, {
         headers: {
           "Content-Type": "application/json",
         },

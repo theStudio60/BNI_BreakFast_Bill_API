@@ -2,13 +2,13 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/build/runtime.958ca697.js",
-        "/build/886.fbf09c7d.js",
-        "/build/app.b6a6835d.js"
+        "/build/runtime.js",
+        "/build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.js",
+        "/build/app.js"
       ],
       "css": [
-        "/build/886.23ff5a90.css",
-        "/build/app.8bb9dfe3.css"
+        "/build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.css",
+        "/build/app.css"
       ]
     }
   }

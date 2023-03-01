@@ -1,6 +1,5 @@
 const { createSlice, configureStore } = require("@reduxjs/toolkit");
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // alerts
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,8 +26,8 @@ const customersSlice = createSlice({
   initialState: [],
   reducers: {
     setCustomers: (state, action) => {
-        return { ...action.payload };
-    }
+      return { ...action.payload };
+    },
   },
 });
 
@@ -43,8 +42,8 @@ const itemsSlice = createSlice({
   initialState: [],
   reducers: {
     setItem: (state, action) => {
-        return { ...action.payload };
-    },   
+      return { ...action.payload };
+    },
   },
 });
 
@@ -59,8 +58,8 @@ const sessionsSlice = createSlice({
   initialState: [],
   reducers: {
     setSessions: (state, action) => {
-      return { ...action.payload };  
-    }      
+      return { ...action.payload };
+    },
   },
 });
 
@@ -75,8 +74,8 @@ const sessionPlacesSlice = createSlice({
   initialState: [],
   reducers: {
     setSessionPlaces: (state, action) => {
-      return { ...action.payload };  
-    }      
+      return { ...action.payload };
+    },
   },
 });
 
@@ -91,8 +90,8 @@ const sessionsTypeSlice = createSlice({
   initialState: [],
   reducers: {
     setSessionTypes: (state, action) => {
-      return { ...action.payload };  
-    }      
+      return { ...action.payload };
+    },
   },
 });
 
@@ -102,13 +101,14 @@ export const { setSessionTypes } = sessionsTypeSlice.actions;
 // User
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//TODO AJOUTER LOADING, fetch user
 const UserSlice = createSlice({
   name: "user",
   initialState: [],
   reducers: {
     setUser: (state, action) => {
-      return { ...action.payload };  
-    }      
+      return { ...action.payload };
+    },
   },
 });
 
@@ -123,8 +123,8 @@ const BillSlice = createSlice({
   initialState: [],
   reducers: {
     setBill: (state, action) => {
-      return { ...action.payload };  
-    }      
+      return { ...action.payload };
+    },
   },
 });
 
@@ -145,7 +145,7 @@ export const store = configureStore({
     bills: BillSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware({
-    serializableCheck: false,
-  })
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });

@@ -1,5 +1,14 @@
 var Encore = require("@symfony/webpack-encore");
 
+// line to add
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin"); //line to add
+require("dotenv").config({
+  // it puts the content to the "process.env" var. System vars are taking precedence
+  path: ".env",
+});
+// and this to pass env vars to the JS application
+const DotenvPlugin = require("webpack-dotenv-plugin");
+
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
   Encore.configureRuntimeEnvironment(process.env.NODE_ENV || "dev");
@@ -23,7 +32,7 @@ Encore
    * Each entry will result in one JavaScript file (e.g. app.js)
    * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
    */
-  .addEntry("app", "./assets/index.js")
+  .addEntry("app", "./assets")
 
   // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
   .splitEntryChunks()
@@ -49,6 +58,43 @@ Encore
   .configureBabel(() => {}, {
     useBuiltIns: "usage",
     corejs: 3,
-  });
+  })
+
+  // entry to add
+  .addPlugin(
+    new BrowserSyncPlugin(
+      {
+        host: "localhost",
+        port: 3000,
+        proxy: process.env.PROXY,
+        files: [
+          {
+            match: ["src/*.php"],
+          },
+          {
+            match: ["templates/*.twig"],
+          },
+          {
+            match: ["assets/*.js"],
+          },
+          {
+            match: ["assets/*.css"],
+          },
+        ],
+        notify: false,
+      },
+
+      {
+        reload: true,
+      }
+    )
+  )
+  .addPlugin(
+    new DotenvPlugin({
+      path: ".env.webpack",
+      sample: ".env.webpack",
+      allowEmptyValues: true,
+    })
+  );
 
 module.exports = Encore.getWebpackConfig();

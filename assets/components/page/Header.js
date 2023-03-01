@@ -6,9 +6,6 @@ import { BsFillGearFill } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
 import React from "react";
 
-const REACT_APP_SERVER_NAME = "http://gz2jcawnza.preview.infomaniak.website";
-const REACT_APP_SERVER_FRONT_NAME = "http://localhost:3001";
-
 export default function Header() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.data);

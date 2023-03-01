@@ -1,6 +1,8 @@
 import * as axios from "axios";
 import cookies from "js-cookie";
 
+const REACT_APP_SERVER_NAME = process.env.REACT_APP_SERVER_NAME;
+
 //on parse le cookie pour pouvoir récuperer le token ou le userId
 function getToken() {
   if (cookies.get("APICOOKIE")) {
@@ -8,8 +10,6 @@ function getToken() {
     return cookie.token;
   }
 }
-
-const REACT_APP_SERVER_NAME = "http://gz2jcawnza.preview.infomaniak.website";
 
 const apiBni = axios.create({
   baseURL: REACT_APP_SERVER_NAME + "/api",

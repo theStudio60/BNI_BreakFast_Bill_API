@@ -12,6 +12,8 @@ import { DateFormat } from "../../components/utils/DateFormat";
 
 import React from "react";
 //création de la requete
+
+// TODO ADD TO REDUX SLICE
 const fetchCustomers = (link) => {
   return async (dispatch) => {
     await apiBni
@@ -83,6 +85,7 @@ export default function CustomerList() {
   }
 }
 
+// TODO MOVE TO AN IDEPEDANT COMPONENT
 function CustomerListUnit(props) {
   const dateDay = new Date();
   const membreDone = new Date(props.customer.membership.membership_done_at);
@@ -123,6 +126,7 @@ function CustomerListUnit(props) {
   );
 }
 
+// TODO MOVE TO AN COMPONENT
 function ButtonsTris({ setAddFilter, link, itemPerPage }) {
   const dispatch = useDispatch();
 

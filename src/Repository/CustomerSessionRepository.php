@@ -50,28 +50,27 @@ class CustomerSessionRepository extends ServiceEntityRepository
      */
     public function findByMonth(Customer $customer, int $month, int $year = null): array
     {
-        if($year === null){
+        if ($year === null) {
             $year = date('Y');
         }
-     return $this->createQueryBuilder('c')
-     ->join('c.session', 's')
-     ->andWhere('c.customer = :customer')
-     ->andWhere('MONTH(s.day_at) = :month')
-     ->andWhere('YEAR(s.day_at) = :year')
-     ->setParameters(['customer' => $customer, 'month' => $month, 'year' => $year])
-     ->orderBy('c.id', 'ASC')
-     ->getQuery()
-     ->getResult()
- ;
+        return $this->createQueryBuilder('c')
+            ->join('c.session', 's')
+            ->andWhere('c.customer = :customer')
+            ->andWhere('MONTH(s.day_at) = :month')
+            ->andWhere('YEAR(s.day_at) = :year')
+            ->setParameters(['customer' => $customer, 'month' => $month, 'year' => $year])
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
-//    public function findOneBySomeField($value): ?CustomerSession
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?CustomerSession
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

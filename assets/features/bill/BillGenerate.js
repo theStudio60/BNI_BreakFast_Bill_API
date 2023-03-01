@@ -38,7 +38,6 @@ export default function BillGenerate() {
     apiBni
       .post("/bills/generator", newValues, {})
       .then((response) => {
-        console.log(response);
         if (response.status === 201) {
           dispatch(
             setAlert({
