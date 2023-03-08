@@ -82,6 +82,19 @@ export default function ItemNew() {
                   <div className="text-danger">{errors.priceOf}</div>
                 )}
               </div>
+              <div className="form-group">
+                <label>Description</label>
+                <Field
+                  name="description"
+                  className="form-control"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.priceOf}
+                />
+                {errors.description && touched.description && (
+                  <div className="text-danger">{errors.description}</div>
+                )}
+              </div>
               <button
                 type="submit"
                 className="btn btn-primary"
