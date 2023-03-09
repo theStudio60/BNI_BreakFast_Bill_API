@@ -29,17 +29,13 @@ export default class ItemDetails extends Component {
 
   render() {
     return (
-      /*       <div>  
-        {this.state.errorMessage && (
-          <Alert message={this.state.errorMessage} color="danger" />
-        )}
-        {this.state.loaded || this.state.item === null ? (
-          <Loading />
-        ) : (
-          this.state.item.id + " - " + this.state.item.name
-        )}</div> */
       <>
-        <h1>item</h1>
+        {items[id](() => (
+          <div>
+            <h1>{item.name}</h1>
+            <p>{item.price}</p>
+          </div>
+        ))}
       </>
     );
   }
