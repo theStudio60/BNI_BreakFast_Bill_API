@@ -7,8 +7,10 @@ export default class ItemDetails extends Component {
     //Récupère le id en découpant la route
     let path = this.props.path["*"];
     const id = path.split("/")[1];
+    const items = get.items.data;
 
     console.log(id);
+    console.log(items[id]);
 
     //Requete pour récuperer id
     apiBni
