@@ -1,44 +1,44 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import apiBni from "../../conf/axios/api.bni";
 import { Loading, Alert } from "../../components/utils";
+import { NavLink } from "react-router-dom";
 
-export default class ItemDetails extends Component {
-  useEffect() {
-    //Récupère le id en découpant la route
-    let path = this.props.path["*"];
-    const id = path.split("/")[1];
-    const items = get.items.data;
+// TODO Aficcher un loading //<Loading />
+// TODO Destructor js
+// TODO "" items details
+// TODO Tableau
 
-    console.log(id);
-    console.log(items[id]);
+function ItemDetails(props) {
+  const [items, setItems] = useState({
+    items: null,
+    loaded: true,
+    errorMessage: null,
+  });
 
+  useEffect(() => {
+    let path = props.path["*"];
+    let id = path.split("/")[1];
     //Requete pour récuperer id
     apiBni
       .get("/items/" + id, {})
       .then((response) => {
-        if (response.status === 200) {
-          const item = response.data;
-          console.log("item", item);
-          this.setState({ item: item, loaded: false });
-        }
+        setItems({ items: response.data, loaded: false });
       })
+
       //si item pas valide on update le state pour mettre un message d'erreur
       .catch((err) => {
-        console.log(err);
-        this.setState({ errorMessage: err.message, loaded: false });
+        setItems({ errorMessage: err.message });
       });
-  }
+  }, []);
 
-  render() {
-    return (
-      <>
-        {items[id](() => (
-          <div>
-            <h1>{item.name}</h1>
-            <p>{item.price}</p>
-          </div>
-        ))}
-      </>
-    );
-  }
+  return (
+    <div>
+      <h1>{items?.items?.name}</h1>
+      <h1>{items?.items?.price_of}</h1>
+      {/*<pre>{JSON.stringify(items, null, 2)}</pre>*/}
+      <NavLink to={"/items"}>Back</NavLink>
+    </div>
+  );
 }
+
+export default ItemDetails;
