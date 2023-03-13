@@ -3,7 +3,7 @@ import apiBni from "../../conf/axios/api.bni";
 import { Loading, Alert } from "../../components/utils";
 import { NavLink } from "react-router-dom";
 
-// TODO Aficcher un loading //<Loading />
+// TODO Aficcher un loading //<Loading /> x
 // TODO Destructor js
 // TODO "" items details
 // TODO Tableau
@@ -30,15 +30,21 @@ function ItemDetails(props) {
         setItems({ errorMessage: err.message });
       });
   }, []);
-
-  return (
-    <div>
-      <h1>{items?.items?.name}</h1>
-      <h1>{items?.items?.price_of}</h1>
-      {/*<pre>{JSON.stringify(items, null, 2)}</pre>*/}
-      <NavLink to={"/items"}>Back</NavLink>
-    </div>
-  );
+  if (items) {
+    return (
+      <div>
+        {this.state.errorMessage && (
+          <Alert message={this.state.errorMessage} color="danger" />
+        )}
+        <h1>{items?.items?.name}</h1>
+        <h1>{items?.items?.price_of}</h1>
+        {/*<pre>{JSON.stringify(items, null, 2)}</pre>*/}
+        <NavLink to={"/items"}>Back</NavLink>
+      </div>
+    );
+  } else {
+    return <Loading />;
+  }
 }
 
 export default ItemDetails;
