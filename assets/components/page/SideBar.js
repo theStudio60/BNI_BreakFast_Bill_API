@@ -51,7 +51,7 @@ export default function SideBar() {
                 Nouvelle place de session
               </NavLink>
               <NavLink
-                to="//session-types"
+                to="/session-types"
                 className="left_menu__dropdown--item"
               >
                 Types de session
