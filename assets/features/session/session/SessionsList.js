@@ -76,7 +76,6 @@ export default function SessionsList() {
       </>
     );
   } else {
-    return;
-    <div>no session</div>;
+    return <div>no sessions</div>;
   }
 }
