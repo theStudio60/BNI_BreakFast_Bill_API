@@ -75,7 +75,10 @@ export default function SessionsList() {
         />
       </>
     );
-  } else {
+  }
+  if (list.length == 0) {
     return <div>no sessions</div>;
+  } else {
+    return <Loading />;
   }
 }
