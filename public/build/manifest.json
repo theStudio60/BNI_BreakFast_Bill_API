@@ -3,5 +3,6 @@
   "build/app.js": "/build/app.js",
   "build/runtime.js": "/build/runtime.js",
   "build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.css": "/build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.css",
-  "build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.js": "/build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.js"
+  "build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.js": "/build/vendors-node_modules_fullcalendar_core_locales_fr_js-node_modules_fullcalendar_daygrid_main_j-14fd70.js",
+  "build/vendors-node_modules_reduxjs_toolkit_dist_redux-toolkit_esm_js-node_modules_axios_index_js-no-39f580.js": "/build/vendors-node_modules_reduxjs_toolkit_dist_redux-toolkit_esm_js-node_modules_axios_index_js-no-39f580.js"
 }

@@ -76,6 +76,7 @@ export default function SessionsList() {
       </>
     );
   } else {
-    return <Loading />;
+    return;
+    <div>no session</div>;
   }
 }
