@@ -33,9 +33,6 @@ function ItemDetails(props) {
   if (items) {
     return (
       <div>
-        {this.state.errorMessage && (
-          <Alert message={this.state.errorMessage} color="danger" />
-        )}
         <h1>{items?.items?.name}</h1>
         <h1>{items?.items?.price_of}</h1>
         {/*<pre>{JSON.stringify(items, null, 2)}</pre>*/}

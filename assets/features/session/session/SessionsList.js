@@ -58,7 +58,9 @@ export default function SessionsList() {
       });
   }, []);
 
+  
   if (list.length !== 0) {
+
     console.log(list);
     return (
       <>
