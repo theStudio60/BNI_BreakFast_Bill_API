@@ -76,7 +76,7 @@ class BillingPDFService
             $pdf->AddPage();
 
             // logo : 65 de largeur et 30 de hauteur
-            $pdf->Image('./img/logos/' . $bill->getAssociation()->getLogoImg(), 10, 10, 65, 30);
+            //$pdf->Image('./img/logos/' . $bill->getAssociation()->getLogoImg(), 10, 10, 65, 30);
 
             //Numéro de facture
             $num_fact = utf8_decode($bill->getBillNumber());
